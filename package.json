@@ -1,0 +1,42 @@
+{
+  "name": "flo-trade-market",
+  "version": "1.0.0",
+  "description": "Central trade market for FLO",
+  "main": "src/main.js",
+  "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "mysql": "^2.18.1",
+    "node-fetch": "^2.6.1",
+    "proper-lockfile": "^4.1.2",
+    "ws": "^8.2.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "postinstall": "node setup/post-install.js",
+    "help": "node setup/help.js",
+    "setup": "node setup/post-install.js",
+    "configure": "node setup/configure-settings.js",
+    "reset-password": "node setup/reset-password.js",
+    "checksum-db": "node debug/checksum-db.js",
+    "start": "node start.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ranchimall/flo-btc-market.git"
+  },
+  "keywords": [
+    "trade-market",
+    "FLO",
+    "BTC",
+    "blockchain",
+    "Ranchimall"
+  ],
+  "author": "Sai Raj",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ranchimall/flo-btc-market/issues"
+  },
+  "homepage": "https://github.com/ranchimall/flo-btc-market#readme"
+}
