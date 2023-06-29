@@ -103,11 +103,6 @@
                         <sm-input type="password" id="login_form__priv_key" placeholder="Private key"
                             error-text="Invalid private key" data-private-key autofocus animate required>
                         </sm-input>
-                        <!-- <sm-checkbox id="remember_me" checked>
-                            <span class="margin-left-0-5">
-                                Remember me
-                            </span>
-                        </sm-checkbox> -->
                         <div class="loader-button-wrapper">
                             <button id="login_button" class="button button--primary" onclick="UI_evt.login('login');"
                                 type="submit">Log
@@ -163,14 +158,24 @@
                 </div>
                 <section id="exchange_wrapper" class="hidden user-content">
                     <div id="asset_list_wrapper" class="grid gap-1 align-start">
-                        <div class="grid gap-0-3">
-                            <div class="flex align-center space-between">
-                                <h5>ASSETS</h5>
-                                <h5>PRICE</h5>
-                            </div>
-                            <p>Countdown shows est. time until asset prices are updated</p>
+                        <div class="flex align-center space-between">
+                            <h5>ASSETS</h5>
+                            <h5>PRICE</h5>
                         </div>
-                        <ul id="listed_assets" class="user-content hidden"></ul>
+                        <ul id="listed_assets" class="user-content hidden">
+                            <li>
+                                <a href="#/exchange?asset=FLO" class="listed-asset grid align-center">
+                                    <div class="listed-asset__icon">
+                                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                            <path
+                                                d="M16.36,15.39c1.83,0,4.26-2.49,4.36-4.74-5.65-.19-4.91.47-7.28,2.39,2.19-2.4,1.42-7.79-1.43-10V6.17c2.33,1.49,2.21,5.14,0,7.15-2.23-2-2.27-5.69,0-7.15V3c-2.83,2.26-3.62,7.66-1.44,10-2.36-1.93-1.63-2.58-7.28-2.39.1,2.26,2.55,4.73,4.36,4.74,0,0-1.93.22-2.74-2.62,2.38-.37,4.29-.14,6.28,2-.79-.11-4.89,1.13-4.38,3.26.53.06,3,.3,3.58-.83-.17.18-1.25.5-1.53.05.38-1.39,2.32-2,2.32-2-1,1.82-.48,4.63.82,5.72,1.31-1.08,1.8-3.95.82-5.72,0,0,1.95.6,2.32,2-.29.46-1.36.12-1.53-.05.58,1.14,3.06.88,3.58.83.49-2.17-3.58-3.36-4.38-3.26,2-2.17,3.92-2.39,6.28-2C18.3,15.62,16.36,15.39,16.36,15.39ZM12,19.46c-.91-.79-.5-3,0-3.59C12.5,16.45,12.91,18.66,12,19.46Z" />
+                                        </svg>
+                                    </div>
+                                    <h4 class="listed-asset__name">FLO</h4>
+                                    <b class="listed-asset__rate">0</b>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                     <div id="asset_page" class="hide-on-mobile">
                         <nav id="asset_page__header" class="hide-on-desktop">
@@ -209,7 +214,7 @@
                                     required animate>
                                 </sm-input>
                                 </sm-input>
-                                <sm-input id="get_total" placeholder="Locked amount (₹)" type="number" min="0.00000001"
+                                <sm-input id="get_total" placeholder="Price" type="number" min="0.00000001"
                                     step="0.00000001" required animate>
                                 </sm-input>
                                 <div class="grid gap-0-5">
@@ -349,7 +354,6 @@
                     </div>
                     <div id="market_orders_wrapper">
                         <div class="grid gap-1">
-                            <p>Order placement denotes priority at which orders will get executed.</p>
                             <div class="flex text-center">
                                 <b class="flex-1" style="color: var(--green);">Buy</b>
                                 <b class="flex-1" style="color: var(--danger-color);">Sell</b>
@@ -422,13 +426,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <p>Deposit rupee from your FLO ID to exchange to purchase assets.</p>
+                                <p>Deposit BTC to exchange to purchase assets.</p>
                                 <div class="grid gap-1">
                                     <div id="exchange_rupee_balance"></div>
                                     <div class="grid">
                                         <div class="flex align-center space-between">
                                             <span class="label">Tradable assets</span>
-                                            <span class="label">Quantity | value</span>
+                                            <span class="label">Quantity</span>
                                         </div>
                                         <fieldset id="my_assets" class="grid"></fieldset>
                                     </div>
@@ -557,166 +561,6 @@
                     <p>No exchange transactions</p>
                 </div>
             </div>
-            <div id="help" class="mobile-page hidden grid gap-2">
-                <h1>Hey there! How can we help you today?</h1>
-                <div class="grid gap-0-5">
-                    <h5>F.A.Qs</h5>
-                    <div class="grid gap-0-5">
-                        <details>
-                            <summary class="interact">
-                                <h4>
-                                    What are the rules of the exchange that I must know?
-                                </h4>
-                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
-                                    width="24px" fill="#000000">
-                                    <path d="M0 0h24v24H0V0z" fill="none" />
-                                    <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
-                                </svg>
-                            </summary>
-                            <ul>
-                                <li>Only the buyers of a token are permitted to sell that token</li>
-                                <li>The maximum quantity of a token that can be sold is capped by the number of tokens
-                                    purchased for each token </li>
-                                <li>You need sell-chips in order to sell. Sell-chips are given against each purchase
-                                    when current token prices are at least 10% higher</li>
-                                <li><strong>Sell side priority</strong>: The first to buy gets the first priority to
-                                    sell no matter when
-                                    that person enters the order</li>
-                                <li><strong>Buy side priority</strong>: the first to order gets the first priority to
-                                    buy</li>
-                                <li>Launch sellers can sell without sell-chips in order to provide initial inventory
-                                </li>
-                            </ul>
-                        </details>
-                        <details>
-                            <summary class="interact">
-                                <h4>
-                                    What are rupee tokens?
-                                </h4>
-                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
-                                    width="24px" fill="#000000">
-                                    <path d="M0 0h24v24H0V0z" fill="none" />
-                                    <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
-                                </svg>
-                            </summary>
-                            <p>
-                                Rupee tokens are a digital asset which has value equal to 1 INR. Which can be used with
-                                RanchiMall exchange and other RanchiMall products.
-                            </p>
-                        </details>
-                        <details>
-                            <summary class="interact">
-                                <h4>
-                                    Where can I get rupee tokens?
-                                </h4>
-                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
-                                    width="24px" fill="#000000">
-                                    <path d="M0 0h24v24H0V0z" fill="none" />
-                                    <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
-                                </svg>
-                            </summary>
-                            <p>
-                                Rupee tokens can be acquired by paying equivalent amount of rupees using our <strong>
-                                    <a href="https://ranchimall.github.io/flopay/" target="_blank">FLO Pay</a>
-                                </strong>
-                                app.
-                            </p>
-                        </details>
-                        <details>
-                            <summary class="interact">
-                                <h4>
-                                    Why is there a difference between current asset prices and prices shown as
-                                    buying/selling price?
-                                </h4>
-                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
-                                    width="24px" fill="#000000">
-                                    <path d="M0 0h24v24H0V0z" fill="none" />
-                                    <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
-                                </svg>
-                            </summary>
-                            <p>
-                                Contrary to other exchanges, the price you see as buying/selling price works as a upper
-                                bound for buying and lower bound for selling. you order will bne executed at
-                                best price determined by the exchange algorithm.
-                            </p>
-                        </details>
-                        <details>
-                            <summary class="interact">
-                                <h4>
-                                    Why my order hasn't been filled yet?
-                                </h4>
-                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
-                                    width="24px" fill="#000000">
-                                    <path d="M0 0h24v24H0V0z" fill="none" />
-                                    <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
-                                </svg>
-                            </summary>
-                            <p>
-                                Our Exchange works a little differently than other exchanges. You can only buy or
-                                sell at
-                                the
-                                market price.
-                                If you have placed an order at lower/higher price than current price, your order will
-                                not be
-                                executed until the market price matches your order price.
-                            </p>
-                        </details>
-                        <details>
-                            <summary class="interact">
-                                <h4>
-                                    Why am I not able to sell my assets?
-                                </h4>
-                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
-                                    width="24px" fill="#000000">
-                                    <path d="M0 0h24v24H0V0z" fill="none" />
-                                    <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
-                                </svg>
-                            </summary>
-                            <p>
-                                We only allows selling of assets that were bought in this exchange.
-                                Assets bought in other exchanges can not be sold here.
-                            </p>
-                        </details>
-                        <details>
-                            <summary class="interact">
-                                <h4>
-                                    I have rupee tokens in FLO ID, so why can't I see them in my portfolio?
-                                </h4>
-                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
-                                    width="24px" fill="#000000">
-                                    <path d="M0 0h24v24H0V0z" fill="none" />
-                                    <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
-                                </svg>
-                            </summary>
-                            <p>
-                                In order to user your rupee tokens in exchange, you have to deposit them in exchange
-                                first.
-                                Assets owned by a FLO ID are different than assets you own in exchange.
-                            </p>
-                        </details>
-                        <details>
-                            <summary class="interact">
-                                <h4>
-                                    Why don't prices fluctuate often?
-                                </h4>
-                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
-                                    width="24px" fill="#000000">
-                                    <path d="M0 0h24v24H0V0z" fill="none" />
-                                    <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
-                                </svg>
-                            </summary>
-                            <p>
-                                Our exchange has a different pricing model than other exchanges. We have an algorithm
-                                based
-                                pricing model which updates prices every hour
-                                based on predefined rules. This prevents rapid fluctuations in price and ensures that
-                                you
-                                can always buy or sell at the best price.
-                            </p>
-                        </details>
-                    </div>
-                </div>
-            </div>
         </section>
         <nav id="main_navbar" class="flex align-center">
             <a href="#/exchange" class="main_navbar__item main_navbar__item--active interact">
@@ -766,15 +610,6 @@
                         d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10h8c1.1,0,2-0.9,2-2v-8C22,6.48,17.52,2,12,2z M12,20c-2.89,0-5.43-1.54-6.83-3.84 l2.95-2.95L11.41,16L16,11.42V13h2V8h-5v2h1.58l-3.28,3.28L8,10.5l-3.69,3.7C4.11,13.5,4,12.76,4,12c0-4.41,3.59-8,8-8s8,3.59,8,8 S16.41,20,12,20z M19.5,20.5c-0.55,0-1-0.45-1-1s0.45-1,1-1s1,0.45,1,1S20.05,20.5,19.5,20.5z" />
                 </svg>
                 <div class="item__title">Portfolio</div>
-            </a>
-            <a href="#/help" class="main_navbar__item interact">
-                <svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
-                    fill="#000000">
-                    <path d="M0 0h24v24H0V0z" fill="none" />
-                    <path
-                        d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z" />
-                </svg>
-                <div class="item__title">Help</div>
             </a>
         </nav>
     </article>
@@ -894,27 +729,6 @@
     </sm-popup>
 
     <!-- templates -->
-    <template id="listed_asset_template">
-        <li>
-            <a class="listed-asset interact grid align-center">
-                <div class="listed-asset__icon"></div>
-                <h4 class="listed-asset__name"></h4>
-                <b class="listed-asset__rate"></b>
-                <div class="listed-asset__countdown">
-                    timer
-                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 24">
-                        <path class="path-a" d="M11.5,2a10,10,0,1,1-10,10,10,10,0,0,1,10-10" />
-                        <path class="path-b" d="M11.5,2a10,10,0,1,1-10,10,10,10,0,0,1,10-10" />
-                    </svg>
-                </div>
-                <svg class="icon listed-asset__right-arrow hide-on-desktop" xmlns="http://www.w3.org/2000/svg"
-                    height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
-                    <path d="M0 0h24v24H0z" fill="none"></path>
-                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
-                </svg>
-            </a>
-        </li>
-    </template>
     <template id="asset_balance_card_template">
         <a class="balance-card interact">
             <div class="balance-card__icon"></div>
@@ -994,7 +808,7 @@
             </div>
             <div class="flex gap-0-5">
                 <div class="grid flex-1">
-                    <span class="label">Valid upto</span>
+                    <span class="label">Price</span>
                     <b class="transaction-card__price wrap-around"></b>
                 </div>
                 <div class="grid flex-1">
@@ -1021,7 +835,7 @@
                 </button>
             </div>
             <div class="grid price-block">
-                <span class="label">Unit price</span>
+                <span class="label">Price</span>
                 <b class="completed-trade__price"></b>
             </div>
             <div class="grid amount-block">
@@ -1400,7 +1214,7 @@
                 const urlSearchParams = new URLSearchParams('?' + searchParams);
                 params = Object.fromEntries(urlSearchParams.entries());
             }
-            if (typeof proxy.userID === "undefined" && !['exchange', 'market', 'help'].includes(pageId)) {
+            if (typeof proxy.userID === "undefined" && !['exchange', 'market'].includes(pageId)) {
                 pageId = 'exchange'
                 history.replaceState(null, null, '#/exchange')
             }
@@ -1410,6 +1224,7 @@
                     case 'exchange':
                         if (document.body.classList.contains('is-signed-in')) {
                             getRef('login_section').classList.add('hidden')
+
                             if (!isMobileView && !params.hasOwnProperty('asset') || params.asset === '') {
                                 if (getRef('listed_assets').querySelector(`[href="#/exchange?asset=FLO"]`))
                                     getRef('listed_assets').querySelector(`[href="#/exchange?asset=FLO"]`).click()
@@ -1419,10 +1234,9 @@
                                     getRef('listed_assets').querySelector('.listed-asset--active').classList.remove('listed-asset--active')
                                 getRef('listed_assets').querySelector(`[href="#/exchange?asset=${params.asset}"]`).classList.add('listed-asset--active')
                                 getRef('chart_asset').textContent = `${params.asset}/INR`
-                                showSuggestedPrice(params.asset)
                                 getRef('traded_asset').textContent = `Trade ${params.asset}`
                                 getRef('trade_button').textContent = `${tradeType} ${params.asset}`
-                                getRef('quantity_type').textContent = tradeType === 'buy' ? formatAmount(allTokens.rupee.net, true) : `${parseFloat(allTokens[params.asset].net.toFixed(4))} ${params.asset}`
+                                getRef('quantity_type').textContent = tradeType === 'buy' ? formatAmount(allTokens.FLO.net, true) : `${parseFloat(allTokens[params.asset].net.toFixed(4))} ${params.asset}`
                                 updateTooltip(params.asset, tradeType)
                             }
                             const animOptions = {
@@ -1508,7 +1322,7 @@
                                 <div class="grid">
                                     <span class="label">Available</span>
                                     <b style="font-size:2rem">${params.asset === 'rupee' ? formatAmount(net, true) : toFixed(net)}</b>
-                                    ${params.asset !== 'rupee' ? html`<span style="font-size: 1rem; opacity:0.8">₹${toFixed(net * floGlobals.exchangeRates[params.asset], 2)}</span>` : ''}
+                                    ${params.asset !== 'rupee' ? html`<span style="font-size: 1rem; opacity:0.8">₹${toFixed(net, 2)}</span>` : ''}
                                 </div>
                                 ${locked ? html`
                                     <div class="grid">
@@ -1800,6 +1614,9 @@
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M22.0861 14.6534C22.3924 14.3472 22.7898 14.1486 23.2186 14.0876L44.6946 11.0319C45.2676 10.9504 45.8455 11.1432 46.2547 11.5524C47.2381 12.5358 46.8168 14.2128 45.4853 14.6146L28.6869 19.6843C28.3711 19.7796 28.0838 19.9515 27.8505 20.1848L27.0092 21.0261L28.3236 22.3404C29.0306 23.0475 29.0976 24.1522 28.5245 24.9346L52.2562 48.6662C53.0372 49.4473 53.0372 50.7136 52.2562 51.4946L51.4947 52.2561C50.7137 53.0372 49.4473 53.0372 48.6663 52.2561L24.9346 28.5245C24.1522 29.0976 23.0475 29.0306 22.3404 28.3236L21.0261 27.0092L20.1848 27.8505C19.9515 28.0838 19.7796 28.3711 19.6843 28.6869L14.6146 45.4853C14.2128 46.8168 12.5358 47.2381 11.5524 46.2547C11.1432 45.8455 10.9504 45.2675 11.0319 44.6946L14.0876 23.2186C14.1486 22.7898 14.3472 22.3924 14.6534 22.0861L15.3949 21.3447C14.8777 20.6386 14.8818 19.67 15.4072 18.9681C14.8209 18.1848 14.8837 17.0693 15.5958 16.3572L16.3573 15.5958C17.0694 14.8837 18.1848 14.8208 18.9681 15.4072C19.6701 14.8818 20.6386 14.8777 21.3447 15.3949L22.0861 14.6534Z"/>
                     </svg>`
             },
+            BTC: {
+                icon: `<svg class="icon" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><g><rect fill="none" height="24" width="24"/></g><g><path d="M17.06,11.57C17.65,10.88,18,9.98,18,9c0-1.86-1.27-3.43-3-3.87L15,3h-2v2h-2V3H9v2H6v2h2v10H6v2h3v2h2v-2h2v2h2v-2 c2.21,0,4-1.79,4-4C19,13.55,18.22,12.27,17.06,11.57z M10,7h4c1.1,0,2,0.9,2,2s-0.9,2-2,2h-4V7z M15,17h-5v-4h5c1.1,0,2,0.9,2,2 S16.1,17,15,17z"/></g></svg>`
+            },
             default: {
                 icon: `<svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15 4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zM3 12c0-2.61 1.67-4.83 4-5.65V4.26C3.55 5.15 1 8.27 1 12s2.55 6.85 6 7.74v-2.09c-2.33-.82-4-3.04-4-5.65z"/></svg>`
             }
@@ -1808,15 +1625,8 @@
             return listedAssets.hasOwnProperty(asset) ? listedAssets[asset].icon : listedAssets.default.icon;
         }
 
-        function formatAmount(amount = 0, shorten = false) {
-            return amount.toLocaleString(`en-IN`, { style: 'currency', currency: 'INR', maximumFractionDigits: shorten ? 2 : 8 })
-        }
-        // Convert milliseconds to time left in HH:MM:SS format
-        function getTimeLeft(milliseconds) {
-            const diff = milliseconds - Date.now()
-            const minutes = Math.floor((diff % 3600000) / 60000)
-            const seconds = Math.floor(((diff % 3600000) % 60000) / 1000)
-            return [`${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`, ((diff % 3600000) / 60000).toFixed(2)]
+        function formatAmount(amount = 0,) {
+            return amount.toLocaleString(`en-US`, { style: 'currency', currency: 'USD', maximumFractionDigits: 8 })
         }
 
         // remove digitals after specified decimal places without rounding
@@ -1827,35 +1637,6 @@
                 return NaN;
             }
             return parseFloat(match[0]);
-        }
-
-
-        function getSuggestedPrice(asset = pagesData.params.asset || 'FLO') {
-            return toFixed(parseFloat(floGlobals.exchangeRates[asset]) * deviation[tradeType])
-        }
-
-        function showSuggestedPrice(asset = pagesData.params.asset || 'FLO') {
-            renderElem(
-                getRef('get_price'),
-                html`
-                <div class="grid">
-                    <div style="font-size: 0.8rem; font-weight: 500; margin-bottom: 0.3rem;">Current price</div>
-                    <h3>${formatAmount(floGlobals.exchangeRates[asset])}</h3>
-                </div>
-                <div class="grid">
-                    <div style="font-size: 0.8rem; font-weight: 500; margin-bottom: 0.3rem;">Valid ${tradeType === 'buy' ? 'upto' : 'until'}</div>
-                    <h3>${formatAmount(getSuggestedPrice(asset))}</h3>
-                </div>
-                <div class="tooltip">
-                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
-                    <p class="banner">
-                        ${tradeType === 'buy' ?
-                        html`<b>Valid upto</b> is the max price upto which your order can be executed, which is <b>${DEFAULT_TRADE_PRICE_DEVIATION_BUY * 100}%</b> higher than current price.` :
-                        html`<b>Valid until</b> is the min price until which your order can be executed, which is <b>${DEFAULT_TRADE_PRICE_DEVIATION_SELL * 100}%</b> lower than current price.`
-                    } System will always try to execute your order at the <b>nearest price possible to current price</b>.
-                    </p>
-                </div>`
-            )
         }
 
         const chartDimensions = {
@@ -1875,37 +1656,19 @@
         let historyLazyLoader
         let portfolioAssetHistoryLazyLoader
         const render = {
-            listedAsset(asset, rate, countDown) {
-                const clone = getRef('listed_asset_template').content.cloneNode(true).firstElementChild
-                clone.firstElementChild.href = `#/exchange?asset=${asset}`
-                clone.firstElementChild.dataset.listedAsset = asset
-                clone.querySelector('.listed-asset__icon').innerHTML = getIcon(asset)
-                clone.querySelector('.listed-asset__rate').textContent = formatAmount(rate)
-                clone.querySelector('.listed-asset__name').textContent = asset
-                floGlobals.countDowns.intervals[asset] = setInterval(() => {
-                    const [timeLeft, minutes] = getTimeLeft(countDown)
-                    clone.querySelector('.listed-asset__countdown').firstChild.textContent = timeLeft;
-                    const pathLength = 63 - Math.ceil((minutes / 60) * 63)
-                    clone.querySelector('.listed-asset__countdown').style.setProperty('--path-length', pathLength)
-                }, 1000);
-                floGlobals.countDowns.timeouts[asset] = setTimeout(() => {
-                    updateRate().catch(console.error)
-                    delete floGlobals.countDowns.timeouts[asset]
-                }, countDown - Date.now());
-                return clone
-            },
             orderCard(orderDetails = {}) {
-                const { id, asset, quantity, price, time, type } = orderDetails
+                console.log(orderDetails)
+                const { id, asset, quantity, price, time_placed, type } = orderDetails
                 const card = getRef('order_template').content.cloneNode(true).firstElementChild
                 card.dataset.id = id
                 card.dataset.type = type
                 card.querySelector('.order-card__type').textContent = type
                 card.querySelector('.order-card__quantity').textContent = `${quantity} ${asset}`
-                card.querySelector('.order-card__price-type').textContent = type === 'buy' ? 'Valid upto' : 'Valid until'
+                card.querySelector('.order-card__price-type').textContent = 'Price'
                 card.querySelector('.order-card__price').textContent = formatAmount(price)
-                card.querySelector('.order-card__amount-type').textContent = type === 'buy' ? 'Locked amount' : 'Min amount'
+                card.querySelector('.order-card__amount-type').textContent = 'Amount'
                 card.querySelector('.order-card__amount').textContent = formatAmount(price * quantity, true)
-                card.querySelector('.order-card__time').textContent = relativeTime.from(new Date(time).getTime())
+                card.querySelector('.order-card__time').textContent = relativeTime.from(new Date(time_placed))
                 return card
             },
             transactionCard(transactionDetails = {}) {
@@ -1957,7 +1720,7 @@
                 card.querySelector('.balance-card__icon').innerHTML = getIcon(asset)
                 const templateToClone = locked ? 'locked_balance_template' : 'net_balance_template';
                 const assetBalance = getRef(templateToClone).content.cloneNode(true)
-                const availableBalance = asset === 'rupee' ? formatAmount(net, true) : `${toFixed(net)} | <span style="font-size: 0.8rem">₹${toFixed(net * floGlobals.exchangeRates[asset], 2)}</span>`
+                const availableBalance = asset === 'rupee' ? formatAmount(net, true) : `${toFixed(net)}`
                 const lockedBalance = asset === 'rupee' ? formatAmount(locked, true) : toFixed(locked)
                 assetBalance.querySelector('.available-balance').innerHTML = availableBalance
                 if (locked) {
@@ -1994,19 +1757,12 @@
                 const frag = document.createDocumentFragment()
                 const ordersType = getRef('my_orders_category_selector').value
                 if (ordersType === 'open') {
-                    getRef('my_orders__title').textContent = 'My orders'
+                    getRef('my_orders__title').textContent = 'My orders';
+                    buyOrders = buyOrders.map(order => ({ ...order, type: 'buy' }))
+                    sellOrders = sellOrders.map(order => ({ ...order, type: 'sell' }))
                     const allOpenOrders = [...buyOrders, ...sellOrders].sort((a, b) => new Date(b.time_placed).getTime() - new Date(a.time_placed).getTime())
                     allOpenOrders.forEach(order => {
-                        const { id, asset, quantity, minPrice = undefined, maxPrice = undefined, time_placed } = order
-                        const orderDetails = {
-                            id,
-                            asset,
-                            quantity,
-                            type: minPrice ? 'sell' : 'buy',
-                            price: minPrice || maxPrice,
-                            time: time_placed
-                        }
-                        frag.append(render.orderCard(orderDetails))
+                        frag.append(render.orderCard(order))
                     })
                 } else {
                     getRef('my_orders__title').textContent = 'My trades'
@@ -2204,15 +1960,16 @@
         getRef('trade_type_selector').addEventListener('change', e => {
             tradeType = e.target.value
             const selectedAsset = pagesData.params.asset
-            showSuggestedPrice()
-            getRef('get_total').setAttribute('placeholder', tradeType === 'buy' ? `Locked amount (₹)` : `Min amount received (₹)`)
             getRef('trade_button').textContent = `${tradeType} ${selectedAsset}`
-            getRef('quantity_type').textContent = tradeType === 'buy' ? formatAmount(allTokens.rupee.net, true) : `${parseFloat(allTokens[selectedAsset].net.toFixed(4))} ${selectedAsset}`
+            getRef('quantity_type').textContent = tradeType === 'buy' ? formatAmount(allTokens.FLO.net, true) : `${parseFloat(allTokens[selectedAsset].net.toFixed(4))} ${selectedAsset}`
             updateTooltip(selectedAsset, tradeType)
         })
         getRef('price_duration_selector').addEventListener('change', e => {
             render.chart(pagesData.params.asset)
         })
+        function getSuggestedPrice() {
+            return 0.001;
+        }
         async function tradeAsset() {
             closePopup()
             const asset = pagesData.params.asset;
@@ -2226,6 +1983,7 @@
                 return notify('You have an open buy order for this asset. Please close it before selling.', 'error')
             }
             buttonLoader('trade_button', true)
+            console.log(asset, quantity, price, proxy.userID, await proxy.secret)
             try {
                 if (tradeType === 'buy') {
                     await floTradeAPI.buy(asset, quantity, price, proxy.userID, await proxy.secret)
@@ -2261,39 +2019,16 @@
             if (e.target.closest('button')) {
                 const selectedAsset = pagesData.params.asset
                 const target = e.target.closest('button')
-                const unitValue = getSuggestedPrice()
                 const fraction = parseFloat(target.value)
                 if (tradeType === 'buy') {
                     getRef('get_total').value = toFixed(fraction * allTokens['rupee'].net)
-                    getRef('get_quantity').value = toFixed((allTokens['rupee'].net * fraction) / getSuggestedPrice())
+                    getRef('get_quantity').value = toFixed((allTokens['rupee'].net * fraction))
                 } else {
-                    getRef('get_total').value = toFixed(fraction * allTokens[selectedAsset].net * getSuggestedPrice())
+                    getRef('get_total').value = toFixed(fraction * allTokens[selectedAsset].net)
                     getRef('get_quantity').value = toFixed(allTokens[selectedAsset].net * fraction)
 
                 }
             }
-        })
-        getRef('get_quantity').addEventListener('focusin', e => {
-            if (tradeType === 'buy') {
-                getRef('quantity_selector_tip').innerHTML = `<b>Locked amount</b> is highest total amount you'll be charged for buying specified quantity, most likely you'll charged less than locked amount.`
-            } else {
-                getRef('quantity_selector_tip').innerHTML = `<b>Min amount</b> received is lowest total amount you'll get by selling specified quantity, most likely you will get more than this amount. `
-            }
-        })
-        getRef('get_total').addEventListener('focusin', e => {
-            if (tradeType === 'buy') {
-                getRef('quantity_selector_tip').innerHTML = `<b>Locked amount</b> is highest total amount you'll be charged for buying specified quantity, most likely you'll charged less than locked amount.`
-            } else {
-                getRef('quantity_selector_tip').innerHTML = `<b>Min amount</b> received is lowest total amount you'll get by selling specified quantity, most likely you will get more than this amount. `
-            }
-        })
-        getRef('get_quantity').addEventListener('keyup', e => {
-            const unitValue = getSuggestedPrice()
-            getRef('get_total').value = toFixed(parseFloat(e.target.value) * unitValue)
-        })
-        getRef('get_total').addEventListener('keyup', e => {
-            const unitValue = getSuggestedPrice()
-            getRef('get_quantity').value = toFixed(parseFloat(e.target.value) / unitValue)
         })
 
         getRef('portfolio_pages_selector').addEventListener('change', e => {
@@ -2310,7 +2045,7 @@
                 const type = target.value
                 const asset = pagesData.params.asset
 
-                getRef('portfolio_quantity_type').textContent = getRef('quantity_type').textContent = asset === 'rupee' ? formatAmount(allTokens.rupee.net, true) : `${toFixed(allTokens[asset].net)} ${asset}`
+                getRef('portfolio_quantity_type').textContent = getRef('quantity_type').textContent = asset === 'rupee' ? formatAmount(allTokens.FLO.net, true) : `${toFixed(allTokens[asset].net)} ${asset}`
                 getRef('portfolio_popup__cta').textContent = `${type} ${asset}`
                 getRef('portfolio_popup__cta').setAttribute('value', type)
                 getRef('portfolio_popup__title').textContent = `${type} ${asset}`
@@ -2416,7 +2151,7 @@
                     case 'deposit':
                         const privKey = getRef('get_private_key').value;
                         if (asset === 'FLO') {
-                            response = await floTradeAPI.depositFLO(quantity, proxy.userID, proxy.sinkID, privKey, proxySecret)
+                            response = await floTradeAPI.depositFLO(quantity, proxy.userID, await proxy.sinkID, privKey, proxySecret)
                         } else {
                             response = await floTradeAPI.depositToken(asset, quantity, proxy.userID, proxy.sinkID, privKey, proxySecret)
                         }
@@ -2672,10 +2407,7 @@
                 case 'confirm_trade_popup':
                     const asset = pagesData.params.asset;
                     const quantity = parseFloat(getRef('get_quantity').value)
-                    const currentPrice = toFixed(floGlobals.exchangeRates[asset]);
-                    const price = toFixed(getSuggestedPrice());
                     const total = formatAmount(parseFloat(getRef('get_total').value))
-                    const minTotal = formatAmount(toFixed(currentPrice * quantity))
                     getRef('confirm_trade__title').textContent = `${tradeType} ${asset}`
                     getRef('confirm_trade__details').innerHTML = `
                         <div class="grid">
@@ -2683,20 +2415,9 @@
                             <b>${quantity} ${asset}</b>
                         </div>
                         <div class="grid">
-                            <p>${tradeType === 'buy' ? 'Min cost' : 'Max earned'}</p>
-                            <div>
-                                <b>${minTotal}</b><span> @ ${currentPrice}/${asset}</span>
-                            </div>
+                            <p>At price</p>
+                            <b>${total} ${asset}</b>
                         </div>
-                        <div class="grid gap-0-3">
-                            <p>${tradeType === 'buy' ? 'Max cost (Amount locked)' : 'Min earned'}</p>
-                            <div>
-                                <b>${total}</b><span> @ ${price}/${asset}</span>
-                            </div>
-                        </div>
-                        <p>
-                            <strong>All trades will be executed at current price.</strong>
-                        </p>
                     `;
                     break;
             }
@@ -2717,62 +2438,8 @@
 
         function updateRate(init = false) {
             return new Promise((resolve, reject) => {
-                floTradeAPI.getRates().then(({ rates, countDown }) => {
-                    console.debug(rates);
-                    floGlobals.exchangeRates = rates
-                    if (init) {
-                        Object.entries(rates).sort((a, b) => a[1] < b[1] ? 1 : -1).forEach(([asset, rate]) => {
-                            if (!allTokens.hasOwnProperty(asset)) {
-                                allTokens[asset] = {
-                                    total: 0,
-                                    locked: 0,
-                                    net: 0
-                                }
-                            }
-                            // dynamically render listed assets if not already rendered
-                            getRef('listed_assets').append(render.listedAsset(asset, formatAmount(parseFloat(rate)), countDown[asset]));
-                            getRef('market_asset_rates').append(createElement('li', {
-                                className: 'listed-asset grid align-center',
-                                innerHTML: `
-                                        <div class="listed-asset__icon">${getIcon(asset)}</div>
-                                        <h4 class="listed-asset__name">${asset}</h4>
-                                        <b class="listed-asset__rate">${formatAmount(rate)}</b>
-                                    `
-                            }))
-                        })
-                        resolve();
-                    } else {
-                        // update rates in UI
-                        for (const asset in rates) {
-                            const listedAsset = getRef(`listed_assets`).querySelector(`[data-listed-asset="${asset}"]`)
-                            if (listedAsset) {
-                                listedAsset.querySelector('.listed-asset__rate').textContent = formatAmount(parseFloat(rates[asset]))
-                                if (floGlobals.countDowns.intervals.hasOwnProperty(asset)) {
-                                    clearInterval(floGlobals.countDowns.intervals[asset]);
-                                }
-                                floGlobals.countDowns.intervals[asset] = setInterval(() => {
-                                    const [timeLeft, minutes] = getTimeLeft(countDown[asset])
-                                    listedAsset.querySelector('.listed-asset__countdown').firstChild.textContent = timeLeft;
-                                    const pathLength = 63 - Math.ceil((minutes / 60) * 63)
-                                    listedAsset.querySelector('.listed-asset__countdown').style.setProperty('--path-length', pathLength)
-                                }, 1000)
-                                if (floGlobals.countDowns.timeouts.hasOwnProperty(asset)) {
-                                    clearTimeout(floGlobals.countDowns.timeouts[asset]);
-                                    delete floGlobals.countDowns.timeouts[asset]
-                                }
-                                floGlobals.countDowns.timeouts[asset] = setTimeout(() => {
-                                    updateRate()
-                                }, countDown[asset] - Date.now());
-                            }
-                        }
-                        resolve();
-                    }
-                    render.chart(pagesData.params.asset)
-                    showSuggestedPrice()
-                }).catch(error => {
-                    notify(error.message, 'error');
-                    reject(error)
-                })
+                render.chart(pagesData.params.asset)
+                resolve();
             }).catch(error => console.error(error))
         }
 
@@ -2810,7 +2477,8 @@
         async function account() {
             floTradeAPI.getAccount(proxy.userID, await proxy.secret).then(async acc => {
                 document.body.classList.add('is-signed-in');
-                getRef('market_asset_rates').parentNode.remove()
+                if (getRef('market_asset_rates'))
+                    getRef('market_asset_rates').parentNode.remove()
                 location.hash = `#/exchange`
                 getRef('user_popup_button').addEventListener('click', () => openPopup('user_popup'));
                 getRef('trade_button').addEventListener('click', () => openPopup('confirm_trade_popup'));
@@ -2831,8 +2499,8 @@
                     net: 0
                 }
                 // token balance
-                acc.tokenBalance.forEach(({ token, quantity }) => {
-                    allTokens[token] = {
+                acc.tokenBalance.forEach(({ asset, quantity }) => {
+                    allTokens[asset] = {
                         total: quantity,
                         locked: 0,
                         net: 0
@@ -2845,17 +2513,12 @@
                 for (const token in allTokens) {
                     allTokens[token].net = allTokens[token].total - allTokens[token].locked
                 }
-                console.debug("FLO", allTokens['FLO']);
-                console.log(await floTradeAPI.getBalance(acc.floID))
-
-                console.debug("RUPEE", allTokens['rupee']);
-
                 // render all assets in portfolio
                 const frag = document.createDocumentFragment();
                 let totalPortfolio = 0;
                 Object.entries(allTokens).sort((a, b) => b[1].net - a[1].net).forEach(([asset], index) => {
                     if (asset !== floGlobals.currency) {
-                        totalPortfolio += allTokens[asset].net * floGlobals.exchangeRates[asset]
+                        totalPortfolio += allTokens[asset].net
                         frag.append(render.assetBalanceCard(asset))
                     }
                     else {
@@ -2873,10 +2536,6 @@
                 floBlockchainAPI.getBalance(acc.floID).then(balance => {
                     const [beforeDecimal, afterDecimal = '00'] = String(balance).split('.')
                     getRef('personal_flo_balance').innerHTML = `<span><b>${beforeDecimal}</b></span>.<span>${afterDecimal}</span>`
-                })
-                floTokenAPI.getBalance(accountDetails.floID, 'rupee').then(balance => {
-                    const [beforeDecimal, afterDecimal] = formatAmount(balance, true).split('₹')[1].split('.')
-                    getRef('personal_rupee_balance').innerHTML = `<span><b>${beforeDecimal}</b></span>.<span>${afterDecimal}</span>`
                 })
                 proxy.secret.then(_ => null).catch(_ => null);
                 routeTo(window.location.hash);

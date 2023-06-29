@@ -745,7 +745,7 @@ sm-checkbox {
           user-select: none;
   color: inherit;
   grid-template-columns: auto 1fr auto auto;
-  grid-template-areas: "icon name rate right-arrow" "icon name countdown right-arrow";
+  grid-template-areas: "icon name rate right-arrow";
 }
 .listed-asset__icon {
   grid-area: icon;
@@ -765,28 +765,6 @@ sm-checkbox {
 }
 .listed-asset__rate {
   grid-area: rate;
-}
-.listed-asset__countdown {
-  display: flex;
-  align-items: center;
-  grid-area: countdown;
-  justify-self: flex-end;
-  font-size: 0.8rem;
-  color: var(--accent-color);
-}
-.listed-asset__countdown .icon {
-  margin-left: 0.3rem;
-  overflow: visible;
-  stroke-width: 3;
-  fill: none;
-}
-.listed-asset__countdown .icon .path-a {
-  stroke: var(--accent-color);
-  stroke-dashoffset: var(--path-length, 0);
-  stroke-dasharray: 63;
-}
-.listed-asset__countdown .icon .path-b {
-  stroke: rgba(var(--text-color), 0.2);
 }
 .listed-asset__right-arrow {
   grid-area: right-arrow;
