@@ -172,7 +172,7 @@
                                         </svg>
                                     </div>
                                     <h4 class="listed-asset__name">FLO</h4>
-                                    <b class="listed-asset__rate">0</b>
+                                    <b id="flo_exchange_rate" class="listed-asset__rate">0</b>
                                 </a>
                             </li>
                         </ul>
@@ -428,7 +428,7 @@
                                 </div>
                                 <p>Deposit BTC to exchange to purchase assets.</p>
                                 <div class="grid gap-1">
-                                    <div id="exchange_rupee_balance"></div>
+                                    <div id="exchange_btc_balance"></div>
                                     <div class="grid">
                                         <div class="flex align-center space-between">
                                             <span class="label">Tradable assets</span>
@@ -450,10 +450,7 @@
                                             d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
                                     </svg>
                                     <p class="banner">
-                                        You need to have rupee tokens in your FLO ID to purchase assets, which then can
-                                        be
-                                        deposited
-                                        to your exchange account.
+                                        You need to have BTC in your portfolio to purchase assets.
                                     </p>
                                 </div>
                             </div>
@@ -1206,7 +1203,7 @@
                                 getRef('chart_asset').textContent = `${params.asset}/INR`
                                 getRef('traded_asset').textContent = `Trade ${params.asset}`
                                 getRef('trade_button').textContent = `${tradeType} ${params.asset}`
-                                getRef('quantity_type').textContent = tradeType === 'buy' ? formatAmount(allTokens.FLO.net, true) : `${parseFloat(allTokens[params.asset].net.toFixed(4))} ${params.asset}`
+                                getRef('quantity_type').textContent = `${parseFloat(allTokens[tradeType === 'buy' ? 'BTC' : params.asset].net.toFixed(4))} ${tradeType === 'buy' ? 'BTC' : params.asset}`
                                 updateTooltip(params.asset, tradeType)
                             }
                             const animOptions = {
@@ -1260,6 +1257,11 @@
                                     getRef('asset_list_wrapper').classList.remove('hide-on-mobile')
                                 }
                             }
+                            getLastTradePrice().then(price => {
+                                getRef('set_price').value = price
+                            }).catch(err => {
+                                console.error(err)
+                            })
                         } else {
                             getRef('login_section').classList.remove('hidden')
                             if (subPageId1 === 'generate') {
@@ -1283,7 +1285,7 @@
                         if (params.asset) {
                             getRef('portfolio_asset__name').textContent = params.asset
                             const { net, locked } = allTokens[params.asset]
-                            const lockedBalance = params.asset === 'rupee' ? formatAmount(locked, true) : toFixed(locked)
+                            const lockedBalance = params.asset === 'rupee' ? formatAmount(locked) : toFixed(locked)
                             showChildElement('portfolio', 1, {
                                 entry: slideInLeft,
                                 exit: slideOutLeft,
@@ -1291,7 +1293,7 @@
                             renderElem(getRef('portfolio_asset__balance'), html`
                                 <div class="grid">
                                     <span class="label">Available</span>
-                                    <b style="font-size:2rem">${params.asset === 'rupee' ? formatAmount(net, true) : toFixed(net)}</b>
+                                    <b style="font-size:2rem">${params.asset === 'rupee' ? formatAmount(net) : toFixed(net)}</b>
                                     ${params.asset !== 'rupee' ? html`<span style="font-size: 1rem; opacity:0.8">₹${toFixed(net, 2)}</span>` : ''}
                                 </div>
                                 ${locked ? html`
@@ -1595,8 +1597,8 @@
             return listedAssets.hasOwnProperty(asset) ? listedAssets[asset].icon : listedAssets.default.icon;
         }
 
-        function formatAmount(amount = 0,) {
-            return amount.toLocaleString(`en-US`, { style: 'currency', currency: 'USD', maximumFractionDigits: 8 })
+        function formatAmount(amount = 0, currency = 'BTC') {
+            return amount.toLocaleString(`en-US`, { style: 'currency', currency, minimumFractionDigits: 0, maximumFractionDigits: 8 })
         }
 
         // remove digitals after specified decimal places without rounding
@@ -1628,16 +1630,17 @@
         const render = {
             orderCard(orderDetails = {}) {
                 console.log(orderDetails)
-                const { id, asset, quantity, price, time_placed, type } = orderDetails
+                const { id, asset, quantity, price, time_placed, type, maxPrice } = orderDetails
                 const card = getRef('order_template').content.cloneNode(true).firstElementChild
+                const unitValue = price || maxPrice
                 card.dataset.id = id
                 card.dataset.type = type
                 card.querySelector('.order-card__type').textContent = type
                 card.querySelector('.order-card__quantity').textContent = `${quantity} ${asset}`
                 card.querySelector('.order-card__price-type').textContent = 'Price'
-                card.querySelector('.order-card__price').textContent = formatAmount(price)
+                card.querySelector('.order-card__price').textContent = formatAmount(unitValue)
                 card.querySelector('.order-card__amount-type').textContent = 'Amount'
-                card.querySelector('.order-card__amount').textContent = formatAmount(price * quantity, true)
+                card.querySelector('.order-card__amount').textContent = formatAmount(unitValue * quantity)
                 card.querySelector('.order-card__time').textContent = relativeTime.from(new Date(time_placed))
                 return card
             },
@@ -1649,7 +1652,7 @@
                 card.querySelector('.completed-trade__quantity').textContent = `${quantity} ${asset}`
                 card.querySelector('.completed-trade__time').textContent = getFormattedTime(time)
                 card.querySelector('.completed-trade__price').textContent = formatAmount(unitValue)
-                card.querySelector('.completed-trade__total').textContent = formatAmount(parseFloat(unitValue * quantity), true)
+                card.querySelector('.completed-trade__total').textContent = formatAmount(parseFloat(unitValue * quantity))
                 card.querySelector('.more-info').dataset.buyer = buyer
                 card.querySelector('.more-info').dataset.seller = seller
                 card.querySelector('.more-info').dataset.other = other
@@ -1662,7 +1665,7 @@
                 card.classList.add(`transaction-card--${type}`)
                 card.querySelector('.transaction-card__quantity').textContent = `${quantity} ${asset}`
                 card.querySelector('.transaction-card__price').textContent = formatAmount(price)
-                card.querySelector('.transaction-card__total').textContent = formatAmount(parseFloat(price * quantity), true)
+                card.querySelector('.transaction-card__total').textContent = formatAmount(parseFloat(price * quantity))
                 card.querySelector('.more-info').dataset.time = time_placed
                 card.querySelector('.more-info').dataset.buyer = type === 'buy' ? floID : undefined
                 card.querySelector('.more-info').dataset.seller = type === 'sell' ? floID : undefined
@@ -1675,7 +1678,7 @@
                 card.querySelector('.completed-trade__quantity').textContent = `${quantity} ${asset}`
                 card.querySelector('.completed-trade__time').textContent = getFormattedTime(time)
                 card.querySelector('.completed-trade__price').textContent = `₹${unitValue}`
-                card.querySelector('.completed-trade__total').textContent = formatAmount(parseFloat(unitValue * quantity), true)
+                card.querySelector('.completed-trade__total').textContent = formatAmount(parseFloat(unitValue * quantity))
                 card.querySelector('.more-info').dataset.buyer = buyer
                 card.querySelector('.more-info').dataset.seller = seller
                 return card
@@ -1689,8 +1692,8 @@
                 card.querySelector('.balance-card__icon').innerHTML = getIcon(asset)
                 const templateToClone = locked ? 'locked_balance_template' : 'net_balance_template';
                 const assetBalance = getRef(templateToClone).content.cloneNode(true)
-                const availableBalance = asset === 'rupee' ? formatAmount(net, true) : `${toFixed(net)}`
-                const lockedBalance = asset === 'rupee' ? formatAmount(locked, true) : toFixed(locked)
+                const availableBalance = asset === 'rupee' ? formatAmount(net) : `${toFixed(net)}`
+                const lockedBalance = asset === 'rupee' ? formatAmount(locked) : toFixed(locked)
                 assetBalance.querySelector('.available-balance').innerHTML = availableBalance
                 if (locked) {
                     assetBalance.querySelector('.locked-balance').textContent = lockedBalance
@@ -1906,7 +1909,7 @@
         function updateTooltip(asset, tradeType) {
             getRef('quantity_selector').querySelectorAll('.button').forEach(button => {
                 if (tradeType === 'buy') {
-                    button.title = `Buy ${asset} worth ${button.textContent} of total rupee`
+                    button.title = `Buy ${asset} worth ${button.textContent} of total ${floGlobals.currency}`
                 } else {
                     button.title = `Sell ${button.textContent} of total ${asset}`
                 }
@@ -1930,20 +1933,26 @@
             tradeType = e.target.value
             const selectedAsset = pagesData.params.asset
             getRef('trade_button').textContent = `${tradeType} ${selectedAsset}`
-            getRef('quantity_type').textContent = tradeType === 'buy' ? formatAmount(allTokens.FLO.net, true) : `${parseFloat(allTokens[selectedAsset].net.toFixed(4))} ${selectedAsset}`
+            getRef('quantity_type').textContent = `${parseFloat(allTokens[tradeType === 'buy' ? 'BTC' : selectedAsset].net.toFixed(4))} ${tradeType === 'buy' ? 'BTC' : selectedAsset}`
             updateTooltip(selectedAsset, tradeType)
         })
         getRef('price_duration_selector').addEventListener('change', e => {
             render.chart(pagesData.params.asset)
         })
-        function getSuggestedPrice() {
-            return 0.001;
+        function getLastTradePrice() {
+            return new Promise((resolve, reject) => {
+                floTradeAPI.getTradeList().then(tradeList => {
+                    floGlobals.lastTradePrice = tradeList[0].unitValue || 0;
+                    getRef('flo_exchange_rate').textContent = `${floGlobals.lastTradePrice} ${floGlobals.currency}`
+                    resolve(floGlobals.lastTradePrice)
+                }).catch(reject)
+            })
         }
         async function tradeAsset() {
             closePopup()
             const asset = pagesData.params.asset;
             const quantity = parseFloat(getRef('get_quantity').value)
-            const price = getSuggestedPrice()
+            const price = getLastTradePrice()
             if (tradeType === 'buy' && accountDetails.sellOrders.some(order => order.asset === asset)) {
                 closePopup()
                 return notify('You have an open sell order for this asset. Please close it before buying.', 'error')
@@ -1986,15 +1995,12 @@
         }
         getRef('quantity_selector').addEventListener('click', e => {
             if (e.target.closest('button')) {
-                const selectedAsset = pagesData.params.asset
+                const selectedAsset = pagesData.params.asset;
+                if (!selectedAsset) return notify('Please select an asset to trade', 'error')
                 const target = e.target.closest('button')
                 const fraction = parseFloat(target.value)
-                if (tradeType === 'buy') {
-                    getRef('get_quantity').value = toFixed((allTokens['FLO'].net * fraction))
-                } else {
-                    getRef('get_quantity').value = toFixed(allTokens[selectedAsset].net * fraction)
-
-                }
+                const price = parseFloat(getRef('set_price').value.trim()) || floGlobals.lastTradePrice || 0
+                getRef('get_quantity').value = toFixed((allTokens[selectedAsset].net / price) * fraction)
             }
         })
 
@@ -2012,7 +2018,7 @@
                 const type = target.value
                 const asset = pagesData.params.asset
 
-                getRef('portfolio_quantity_type').textContent = getRef('quantity_type').textContent = asset === 'rupee' ? formatAmount(allTokens.FLO.net, true) : `${toFixed(allTokens[asset].net)} ${asset}`
+                getRef('portfolio_quantity_type').textContent = getRef('quantity_type').textContent = `${toFixed(allTokens[type === 'buy' ? 'BTC' : asset].net)} ${asset}`
                 getRef('portfolio_popup__cta').textContent = `${type} ${asset}`
                 getRef('portfolio_popup__cta').setAttribute('value', type)
                 getRef('portfolio_popup__title').textContent = `${type} ${asset}`
@@ -2383,7 +2389,7 @@
                         </div>
                         <div class="grid">
                             <p>At price</p>
-                            <b>${setPrice} ${asset}</b>
+                            <b>${setPrice}</b>
                         </div>
                     `;
                     break;
@@ -2475,7 +2481,7 @@
                 acc.sellOrders.forEach(({ asset, quantity }) => {
                     allTokens[asset].locked += quantity
                 })
-                allTokens[floGlobals.currency].locked = acc.buyOrders.reduce((a, x) => a + x.quantity * x.price, 0)
+                allTokens[floGlobals.currency].locked = acc.buyOrders.reduce((a, x) => a + x.quantity * x.maxPrice, 0)
                 for (const token in allTokens) {
                     allTokens[token].net = allTokens[token].total - allTokens[token].locked
                 }
@@ -2488,13 +2494,13 @@
                         frag.append(render.assetBalanceCard(asset))
                     }
                     else {
-                        getRef('exchange_rupee_balance').innerHTML = ``
-                        getRef('exchange_rupee_balance').append(render.assetBalanceCard(asset))
+                        getRef('exchange_btc_balance').innerHTML = ``
+                        getRef('exchange_btc_balance').append(render.assetBalanceCard(asset))
                     }
                 })
                 getRef('my_assets').innerHTML = ''
                 getRef('my_assets').append(frag)
-                getRef('portfolio_value').textContent = formatAmount(toFixed(totalPortfolio, 2), true)
+                getRef('portfolio_value').textContent = formatAmount(toFixed(totalPortfolio, 2))
                 //My orders
                 render.userOrders();
 
