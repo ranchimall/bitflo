@@ -214,7 +214,7 @@
                                     required animate>
                                 </sm-input>
                                 </sm-input>
-                                <sm-input id="get_total" placeholder="Price" type="number" min="0.00000001"
+                                <sm-input id="set_price" placeholder="Price" type="number" min="0.00000001"
                                     step="0.00000001" required animate>
                                 </sm-input>
                                 <div class="grid gap-0-5">
@@ -458,36 +458,6 @@
                                 </div>
                             </div>
                             <div id="portfolio_cards_wrapper">
-                                <div class="grid gap-0-5 personal-asset-balance">
-                                    <div class="flex align-center">
-                                        <svg class="icon" xmlns="http://www.w3.org/2000/svg"
-                                            enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24"
-                                            width="24px" fill="#000000">
-                                            <g>
-                                                <rect fill="none" height="24" width="24" />
-                                            </g>
-                                            <g>
-                                                <g>
-                                                    <path
-                                                        d="M13.66,7C13.1,5.82,11.9,5,10.5,5L6,5V3h12v2l-3.26,0c0.48,0.58,0.84,1.26,1.05,2L18,7v2l-2.02,0c-0.25,2.8-2.61,5-5.48,5 H9.77l6.73,7h-2.77L7,14v-2h3.5c1.76,0,3.22-1.3,3.46-3L6,9V7L13.66,7z" />
-                                                </g>
-                                            </g>
-                                        </svg>
-                                        <h5>Rupee token</h5>
-                                    </div>
-                                    <h1 class="h1" id="personal_rupee_balance"></h1>
-                                    <a href="https://ranchimall.github.io/flopay/#/home" target="_blank"
-                                        class="button interact">
-                                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px"
-                                            viewBox="0 0 24 24" width="24px" fill="#000000">
-                                            <path d="M0 0h24v24H0z" fill="none"></path>
-                                            <path
-                                                d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z">
-                                            </path>
-                                        </svg>
-                                        Top-up
-                                    </a>
-                                </div>
                                 <div class="grid gap-0-5 personal-asset-balance">
                                     <div class="flex align-center">
                                         <svg class="icon flo-icon" width="64" height="64" viewBox="0 0 64 64"
@@ -1686,14 +1656,13 @@
                 return card
             },
             marketOrderCard(orderDetails = {}) {
-                const { floID, asset, quantity, minPrice, maxPrice, time_placed, type } = orderDetails
+                const { floID, asset, quantity, price, time_placed, type } = orderDetails
                 const card = getRef('market_order_template').content.cloneNode(true).firstElementChild
-                const unitValue = minPrice || maxPrice;
                 card.dataset.type = type
                 card.classList.add(`transaction-card--${type}`)
                 card.querySelector('.transaction-card__quantity').textContent = `${quantity} ${asset}`
-                card.querySelector('.transaction-card__price').textContent = formatAmount(unitValue)
-                card.querySelector('.transaction-card__total').textContent = formatAmount(parseFloat(unitValue * quantity), true)
+                card.querySelector('.transaction-card__price').textContent = formatAmount(price)
+                card.querySelector('.transaction-card__total').textContent = formatAmount(parseFloat(price * quantity), true)
                 card.querySelector('.more-info').dataset.time = time_placed
                 card.querySelector('.more-info').dataset.buyer = type === 'buy' ? floID : undefined
                 card.querySelector('.more-info').dataset.seller = type === 'sell' ? floID : undefined
@@ -2005,7 +1974,7 @@
             finally {
                 updateRate()
                 getRef('get_quantity').value = 0
-                getRef('get_total').value = 0
+                getRef('set_price').value = 0
                 setTimeout(() => {
                     buttonLoader('trade_button', false)
                     getRef('trade_button').disabled = true
@@ -2021,10 +1990,8 @@
                 const target = e.target.closest('button')
                 const fraction = parseFloat(target.value)
                 if (tradeType === 'buy') {
-                    getRef('get_total').value = toFixed(fraction * allTokens['rupee'].net)
-                    getRef('get_quantity').value = toFixed((allTokens['rupee'].net * fraction))
+                    getRef('get_quantity').value = toFixed((allTokens['FLO'].net * fraction))
                 } else {
-                    getRef('get_total').value = toFixed(fraction * allTokens[selectedAsset].net)
                     getRef('get_quantity').value = toFixed(allTokens[selectedAsset].net * fraction)
 
                 }
@@ -2407,7 +2374,7 @@
                 case 'confirm_trade_popup':
                     const asset = pagesData.params.asset;
                     const quantity = parseFloat(getRef('get_quantity').value)
-                    const total = formatAmount(parseFloat(getRef('get_total').value))
+                    const setPrice = formatAmount(parseFloat(getRef('set_price').value))
                     getRef('confirm_trade__title').textContent = `${tradeType} ${asset}`
                     getRef('confirm_trade__details').innerHTML = `
                         <div class="grid">
@@ -2416,7 +2383,7 @@
                         </div>
                         <div class="grid">
                             <p>At price</p>
-                            <b>${total} ${asset}</b>
+                            <b>${setPrice} ${asset}</b>
                         </div>
                     `;
                     break;
@@ -2479,7 +2446,6 @@
                 document.body.classList.add('is-signed-in');
                 if (getRef('market_asset_rates'))
                     getRef('market_asset_rates').parentNode.remove()
-                location.hash = `#/exchange`
                 getRef('user_popup_button').addEventListener('click', () => openPopup('user_popup'));
                 getRef('trade_button').addEventListener('click', () => openPopup('confirm_trade_popup'));
                 accountDetails = acc
@@ -2492,7 +2458,7 @@
                 if (acc.subAdmin)
                     console.info("logged in as subAdmin");
 
-                // rupee balance init
+                // FLO balance init
                 allTokens[floGlobals.currency] = {
                     total: 0,
                     locked: 0,
@@ -2509,7 +2475,7 @@
                 acc.sellOrders.forEach(({ asset, quantity }) => {
                     allTokens[asset].locked += quantity
                 })
-                allTokens[floGlobals.currency].locked = acc.buyOrders.reduce((a, x) => a + x.quantity * x.maxPrice, 0)
+                allTokens[floGlobals.currency].locked = acc.buyOrders.reduce((a, x) => a + x.quantity * x.price, 0)
                 for (const token in allTokens) {
                     allTokens[token].net = allTokens[token].total - allTokens[token].locked
                 }
