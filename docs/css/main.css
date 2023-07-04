@@ -453,24 +453,6 @@ ul {
   align-content: flex-start;
 }
 
-.logo {
-  display: grid;
-  align-items: center;
-  grid-template-columns: auto 1fr;
-  gap: 0 0.3rem;
-  margin-right: auto;
-}
-.logo h4 {
-  text-transform: capitalize;
-  font-weight: 600;
-}
-.logo .main-logo {
-  height: 1.4rem;
-  width: 1.4rem;
-  fill: rgba(var(--text-color), 1);
-  stroke: none;
-}
-
 details:not(:last-of-type) {
   border-bottom: thin solid rgba(var(--text-color), 0.3);
 }
@@ -681,6 +663,22 @@ sm-checkbox {
   padding: 1rem 1.5rem;
   width: 100%;
   align-items: center;
+}
+
+.app-brand {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+}
+.app-brand .icon {
+  height: 1.7rem;
+  width: 1.7rem;
+}
+
+.app-name__company {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(var(--text-color), 0.8);
 }
 
 #user_popup_button {
