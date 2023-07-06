@@ -427,24 +427,6 @@ ul {
     align-content: flex-start;
   }
 }
-.logo {
-  display: grid;
-  align-items: center;
-  grid-template-columns: auto 1fr;
-  gap: 0 0.3rem;
-  margin-right: auto;
-  h4 {
-    text-transform: capitalize;
-    font-weight: 600;
-  }
-
-  .main-logo {
-    height: 1.4rem;
-    width: 1.4rem;
-    fill: rgba(var(--text-color), 1);
-    stroke: none;
-  }
-}
 details {
   &:not(:last-of-type) {
     border-bottom: thin solid rgba(var(--text-color), 0.3);
@@ -643,6 +625,22 @@ sm-checkbox {
   width: 100%;
   align-items: center;
 }
+.app-brand{
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+  .icon{
+    height: 1.7rem;
+    width: 1.7rem;
+  }
+}
+.app-name{
+  &__company{
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: rgba(var(--text-color), 0.8);
+  }
+}
 #user_popup_button {
   background-color: rgba(var(--text-color), 0.06);
   border-radius: 2rem;
@@ -702,7 +700,7 @@ sm-checkbox {
   user-select: none;
   color: inherit;
   grid-template-columns: auto 1fr auto auto;
-  grid-template-areas: "icon name rate right-arrow" "icon name countdown right-arrow";
+  grid-template-areas: "icon name rate right-arrow";
   &__icon {
     grid-area: icon;
     padding: 0.5rem;
@@ -721,28 +719,6 @@ sm-checkbox {
   }
   &__rate {
     grid-area: rate;
-  }
-  &__countdown {
-    display: flex;
-    align-items: center;
-    grid-area: countdown;
-    justify-self: flex-end;
-    font-size: 0.8rem;
-    color: var(--accent-color);
-    .icon {
-      margin-left: 0.3rem;
-      overflow: visible;
-      stroke-width: 3;
-      fill: none;
-      .path-a {
-        stroke: var(--accent-color);
-        stroke-dashoffset: var(--path-length, 0);
-        stroke-dasharray: 63;
-      }
-      .path-b {
-        stroke: rgba(var(--text-color), 0.2);
-      }
-    }
   }
   &__right-arrow {
     grid-area: right-arrow;
