@@ -39,7 +39,7 @@ function confirmDepositFLO() {
 verifyTx.FLO = function (sender, txid, group) {
     return new Promise((resolve, reject) => {
         floBlockchainAPI.getTx(txid).then(tx => {
-            let vin_sender = tx.vin.filter(v => v.addr === sender)
+            let vin_sender = tx.vin.filter(v => v.addresses[0] === sender)
             if (!vin_sender.length)
                 return reject([true, "Transaction not sent by the sender"]);
             if (vin_sender.length !== tx.vin.length)
@@ -213,9 +213,10 @@ function processAll() {
 var lastSyncBlockHeight = 0;
 
 function periodicProcess() {
-    floBlockchainAPI.promisedAPI('api/blocks?limit=1').then(result => {
-        if (lastSyncBlockHeight < result.blocks[0].height) {
-            lastSyncBlockHeight = result.blocks[0].height;
+    floBlockchainAPI.promisedAPI('api/status').then(result => {
+        let blockbook_height = result.blockbook.bestHeight;
+        if (lastSyncBlockHeight < blockbook_height) {
+            lastSyncBlockHeight = blockbook_height;
             processAll();
             console.log("Last Block :", lastSyncBlockHeight);
         }
