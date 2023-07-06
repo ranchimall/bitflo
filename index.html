@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>FLO Standard Operators</title>
+    <script id="floGlobals">
+        /* Constants for FLO blockchain operations !!Make sure to add this at beginning!! */
+        const floGlobals = {
+            blockchain: "FLO",
+            adminID: "FKAEdnPfjXLHSYwrXQu377ugN4tXU7VGdf",
+            application: "TEST_MODE",
+        }
+    </script>
+    <script>
+            (function () {
+                const urlSearchParams = new URLSearchParams(window.location.search);
+                const params = Object.fromEntries(urlSearchParams.entries());
+                if ('testnet' in params) {
+                    floGlobals.blockchain = "FLO_TEST";
+                    floGlobals.adminID = "oKKHdK5uYAJ52U91sYsWhnEaEAAhZP779B";
+                    floGlobals.application = "TEST_MODE_testnet";
+                }
+
+                if ('quick' in params)
+                    window.quick = true;
+
+            })();
+    </script>
+    <script src="lib.js"></script>
+    <script src="floCrypto.js"></script>
+    <script src="btcOperator.js"></script>
+    <script src="floBlockchainAPI.js"></script>
+    <script src="floTokenAPI.js"></script>
+    <script src="compactIDB.js"></script>
+    <script src="floCloudAPI.js"></script>
+    <script src="floDapps.js"></script>
+    <script id="onLoadStartUp">
+        function onLoadStartUp() {
+            if (window.quick) return;
+            //floDapps.addStartUpFunction('Sample', Promised Function)
+            //floDapps.setAppObjectStores({sampleObs1:{}, sampleObs2:{options{autoIncrement:true, keyPath:'SampleKey'}, Indexes:{sampleIndex:{}}}})
+            //floDapps.setCustomPrivKeyInput( () => { FUNCTION BODY *must resolve private key* } )
+            floDapps.launchStartUp().then(result => {
+                console.log(result)
+                alert(`Welcome FLO_ID: ${myFloID}`)
+                //App functions....
+            }).catch(error => console.error(error))
+        }
+    </script>
+</head>
+
+<body onload="onLoadStartUp()">
+    TEST_MODE
+    (use console)
+</body>
+
+</html>
