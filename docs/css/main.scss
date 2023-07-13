@@ -625,17 +625,17 @@ sm-checkbox {
   width: 100%;
   align-items: center;
 }
-.app-brand{
+.app-brand {
   display: flex;
   gap: 0.3rem;
   align-items: center;
-  .icon{
+  .icon {
     height: 1.7rem;
     width: 1.7rem;
   }
 }
-.app-name{
-  &__company{
+.app-name {
+  &__company {
     font-size: 0.8rem;
     font-weight: 500;
     color: rgba(var(--text-color), 0.8);
@@ -1130,66 +1130,30 @@ sm-checkbox {
 #portfolio_cards_wrapper {
   display: grid;
   gap: 0.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
 }
 .personal-asset-balance {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 0.5rem;
   align-content: flex-start;
   padding: 1rem;
   border-radius: 0.5rem;
-  color: rgba(0, 0, 0, 0.8);
   width: 100%;
+  background-color: rgba(var(--text-color), 0.03);
   &:not(:last-of-type) {
     margin-right: 0.5rem;
   }
-  &:nth-of-type(1) {
-    background: url("bg-art2.svg") no-repeat bottom right, hsl(141, 100%, 88%);
-    background-size: contain;
-    .icon {
-      background-color: hsla(141, 100%, 70%, 0.5);
-    }
-    .button {
-      border: solid thin hsla(141, 100%, 70%, 0.5);
-    }
-  }
-  &:nth-of-type(2) {
-    background: url("back.svg") no-repeat top right, hsl(62, 100%, 83%);
-    background-size: contain;
-    .icon {
-      background-color: hsla(55, 100%, 50%, 0.5);
-    }
-  }
-  & > .flex {
-    margin-bottom: 0.3rem;
-    .icon {
-      height: 2rem;
-      width: 2rem;
-      padding: 0.4rem;
-      border-radius: 0.3rem;
-      fill: rgba(0, 0, 0, 0.8);
-      margin-right: 0.5rem;
-    }
-  }
-  .button {
-    display: flex;
-    align-items: center;
-    margin-top: 0.5rem;
-    padding-right: 0.8rem;
-    justify-self: flex-start;
-    border-radius: 1rem;
+  .icon {
+    height: 3rem;
+    width: 3rem;
+    padding: 0.8rem;
+    border-radius: 3rem;
+    margin-right: 0.5rem;
     background-color: rgba(var(--foreground-color), 1);
-    color: rgba(var(--text-color), 1);
-    transition: box-shadow 0.3s;
-    .icon {
-      height: 1rem;
-      background-color: transparent;
-      margin-right: 0.3rem;
-    }
-    &:hover {
-      box-shadow: 0 0.3rem 0.5rem rgba(0 0 0/ 0.16);
-    }
+    flex-shrink: 0;
   }
 }
-#personal_rupee_balance,
+#personal_btc_balance,
 #personal_flo_balance {
   span:first-of-type {
     font-size: 1.5rem;
