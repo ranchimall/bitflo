@@ -205,12 +205,11 @@
                                         <sm-chip value="sell">Sell</sm-chip>
                                     </sm-chips>
                                 </div>
-                                <div id="get_price" class="flex align-center space-between"></div>
                                 <sm-input id="get_quantity" placeholder="Quantity" type="number" step="0.00000001"
                                     required animate>
                                 </sm-input>
                                 </sm-input>
-                                <sm-input id="set_price" placeholder="Price" type="number" min="0.00000001"
+                                <sm-input id="get_price" placeholder="Price (BTC)" type="number" min="0.00000001"
                                     step="0.00000001" required animate>
                                 </sm-input>
                                 <div class="grid gap-0-5">
@@ -394,12 +393,19 @@
                     </div>
                     <div id="portfolio_pages_wrapper">
                         <div class="grid gap-1-5">
-                            <h4>
-                                My portfolio
-                            </h4>
+                            <div class="flex align-center space-between">
+                                <h4>
+                                    My portfolio
+                                </h4>
+                                <sm-select id="currency_selector">
+                                    <sm-option value="btc" selected>BTC</sm-option>
+                                    <sm-option value="usd">USD</sm-option>
+                                    <sm-option value="inr">INR</sm-option>
+                                </sm-select>
+                            </div>
                             <div class="grid">
                                 <span class="label">Portfolio valuation</span>
-                                <h1 id="portfolio_value" style="font-size: 2.5rem;"></h1>
+                                <h1 id="portfolio_value" class="amount-shown" style="font-size: 2.5rem;"></h1>
                             </div>
                             <div class="grid gap-0-5">
                                 <div class="flex align-center space-between">
@@ -418,7 +424,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <p>Deposit BTC to exchange to purchase assets.</p>
+                                <p>Transfer BTC from signed-in on-chain bitcoin address to exchange to purchase assets.
+                                </p>
                                 <div class="grid gap-1">
                                     <div id="exchange_btc_balance"></div>
                                     <div class="grid">
@@ -1121,6 +1128,20 @@
                     closePopup()
                 })
             })
+            getExchangeRate()
+                .then(() => {
+                    selectedCurrency = localStorage.getItem('bitflo-currency') || 'btc'
+                    setTimeout(() => {
+                        document.getElementById('currency_selector').value = selectedCurrency
+                    }, 100)
+                })
+                .catch(e => {
+                    selectedCurrency = 'btc'
+                    // console.error(e)
+                    getRef('currency_selector').classList.add('hidden')
+                }).finally(() => {
+                    document.querySelectorAll('.currency-symbol').forEach(el => el.innerHTML = listedAssets[selectedCurrency].icon)
+                })
         });
         function createRipple(event, target) {
             const circle = document.createElement("span");
@@ -1252,11 +1273,6 @@
                                     getRef('asset_list_wrapper').classList.remove('hide-on-mobile')
                                 }
                             }
-                            getLastTradePrice().then(price => {
-                                getRef('set_price').value = price
-                            }).catch(err => {
-                                console.error(err)
-                            })
                         } else {
                             getRef('login_section').classList.remove('hidden')
                             if (subPageId1 === 'generate') {
@@ -1592,7 +1608,7 @@
         }
 
         function formatAmount(amount = 0, currency = 'BTC') {
-            return amount.toLocaleString(`en-US`, { style: 'currency', currency, minimumFractionDigits: 0, maximumFractionDigits: 8 })
+            return amount.toLocaleString(currency === 'inr' ? 'en-IN' : `en-US`, { style: 'currency', currency, minimumFractionDigits: 0, maximumFractionDigits: 8 })
         }
 
         // remove digitals after specified decimal places without rounding
@@ -1604,6 +1620,67 @@
             }
             return parseFloat(match[0]);
         }
+        let globalExchangeRate = {}
+        async function getExchangeRate() {
+            return new Promise((resolve, reject) => {
+                Promise.all(['usd', 'inr'].map(cur => fetch(`https://bitpay.com/api/rates/btc/${cur}`))).then(responses => {
+                    Promise.all(responses.map(res => res.json())).then(rates => {
+                        rates.forEach(rate => {
+                            globalExchangeRate[rate.code.toLowerCase()] = rate.rate
+                        })
+                        globalExchangeRate.btc = 1
+                        resolve(globalExchangeRate)
+                    }).catch(err => reject(err))
+                }).catch(err => reject(err))
+            })
+        }
+        function getConvertedAmount(amount) {
+            // check if amount is a string and convert it to a number
+            if (typeof amount === 'string') {
+                amount = parseFloat(amount)
+            }
+            if (globalExchangeRate[selectedCurrency])
+                return parseFloat((amount * globalExchangeRate[selectedCurrency]).toFixed(8))
+            else return amount
+        }
+        function roundUp(amount, precision = 2) {
+            return parseFloat((Math.ceil(amount * Math.pow(10, precision)) / Math.pow(10, precision)).toFixed(precision))
+        }
+        let previouslySelectedCurrency = localStorage.getItem('bitflo-currency') || 'btc';
+        getRef('currency_selector').addEventListener('change', e => {
+            selectedCurrency = e.target.value;
+            localStorage.setItem('bitflo-currency', selectedCurrency);
+            document.querySelectorAll('.currency-symbol').forEach(el => el.innerHTML = listedAssets[selectedCurrency].icon)
+            document.querySelectorAll('.amount-shown').forEach(el => {
+                if (el.tagName.includes('SM-')) {
+                    const originalAmount = parseFloat(el.value.trim());
+                    let convertedAmount
+                    const rupeeRate = (globalExchangeRate.inr / globalExchangeRate.usd);
+                    switch (previouslySelectedCurrency) {
+                        case 'usd':
+                            if (selectedCurrency === 'inr')
+                                convertedAmount = roundUp(originalAmount * rupeeRate)
+                            else
+                                convertedAmount = roundUp((originalAmount / globalExchangeRate.usd), 8)
+                            break;
+                        case 'inr':
+                            if (selectedCurrency === 'usd')
+                                convertedAmount = roundUp((originalAmount / rupeeRate))
+                            else
+                                convertedAmount = roundUp((originalAmount / globalExchangeRate.inr), 8)
+                            break;
+                        case 'btc':
+                            convertedAmount = roundUp(originalAmount * globalExchangeRate[selectedCurrency])
+                            break;
+                    }
+                    el.value = convertedAmount
+                } else {
+                    if (el.dataset.btcAmount === undefined) return
+                    el.textContent = formatAmount(getConvertedAmount(el.dataset.btcAmount), selectedCurrency)
+                }
+            })
+            previouslySelectedCurrency = selectedCurrency
+        })
 
         const chartDimensions = {
             height: 0,
@@ -1954,7 +2031,7 @@
             closePopup()
             const asset = pagesData.params.asset;
             const quantity = parseFloat(getRef('get_quantity').value)
-            const price = getLastTradePrice()
+            const price = parseFloat(getRef('get_price').value)
             if (tradeType === 'buy' && accountDetails.sellOrders.some(order => order.asset === asset)) {
                 closePopup()
                 return notify('You have an open sell order for this asset. Please close it before buying.', 'error')
@@ -1984,15 +2061,12 @@
             }
             finally {
                 updateRate()
-                getRef('get_quantity').value = 0
-                getRef('set_price').value = 0
+                getRef('get_quantity').value = ''
+                buttonLoader('trade_button', false)
+                getRef('trade_button').disabled = true
                 setTimeout(() => {
-                    buttonLoader('trade_button', false)
-                    getRef('trade_button').disabled = true
-                    setTimeout(() => {
-                        getRef('trade_button').querySelector('.stateful-result').remove()
-                    }, 100);
-                }, 4000);
+                    getRef('trade_button').querySelector('.stateful-result')?.remove()
+                }, 100);
             }
         }
         getRef('quantity_selector').addEventListener('click', e => {
@@ -2001,12 +2075,18 @@
                 if (!selectedAsset) return notify('Please select an asset to trade', 'error')
                 const target = e.target.closest('button')
                 const fraction = parseFloat(target.value)
-                const price = parseFloat(getRef('set_price').value.trim()) || floGlobals.lastTradePrice || 0
-                getRef('get_quantity').value = toFixed((allTokens[selectedAsset].net / price) * fraction)
+                const price = parseFloat(getRef('get_price').value.trim()) || floGlobals.lastTradePrice || 0
+                const tradeType = getRef('trade_type_selector').value
+                if (tradeType === 'buy') {
+                    getRef('get_quantity').value = toFixed(allTokens['BTC'].net * fraction / price)
+                } else {
+                    getRef('get_quantity').value = toFixed(allTokens[selectedAsset].net * fraction)
+                }
+                getRef('trade_form')._checkValidity()
             }
         })
 
-        getRef('set_price').addEventListener('input', e => {
+        getRef('get_price').addEventListener('input', e => {
             const selectedAsset = pagesData.params.asset;
             getRef('get_quantity').value = toFixed(allTokens[selectedAsset].net / parseFloat(e.target.value))
         })
@@ -2131,19 +2211,32 @@
                 switch (type) {
                     case 'deposit':
                         const privKey = getRef('get_private_key').value;
-                        if (asset === 'FLO') {
-                            response = await floTradeAPI.depositFLO(quantity, proxy.userID, await proxy.sinkID, privKey, proxySecret)
-                        } else {
-                            response = await floTradeAPI.depositToken(asset, quantity, proxy.userID, proxy.sinkID, privKey, proxySecret)
+                        switch (asset) {
+                            case 'FLO':
+                                response = await floTradeAPI.depositFLO(quantity, proxy.userID, await proxy.sinkID, privKey, proxySecret)
+                                break;
+                            case 'BTC':
+                                if (quantity <= floGlobals.fee)
+                                    return notify(`Quantity must be greater than ${floGlobals.fee} BTC`, 'error')
+                                response = await floTradeAPI.depositBTC(quantity, proxy.userID, await proxy.sinkID, privKey, proxySecret)
+                                break;
+                            default:
+                                response = await floTradeAPI.depositToken(asset, quantity, proxy.userID, await proxy.sinkID, privKey, proxySecret)
                         }
                         console.log(response)
                         showWalletResult('success', `Sent ${asset} deposit request`, 'This may take upto 30 mins to reflect in your portfolio.')
                         break;
                     case 'withdraw':
-                        if (asset === 'FLO') {
-                            response = await floTradeAPI.withdrawFLO(quantity, proxy.userID, proxySecret)
-                        } else {
-                            response = await floTradeAPI.withdrawToken(asset, quantity, proxy.userID, proxySecret)
+                        switch (asset) {
+                            case 'FLO':
+                                response = await floTradeAPI.withdrawFLO(quantity, proxy.userID, proxySecret)
+                                break;
+                            case 'BTC':
+                                response = await floTradeAPI.withdrawBTC(quantity, proxy.userID, proxySecret)
+                                break;
+                            default:
+                                response = await floTradeAPI.withdrawToken(asset, quantity, proxy.userID, proxySecret)
+                                break;
                         }
                         console.log(response)
                         showWalletResult('success', `Sent ${asset} withdraw request`, 'This may take upto 30 mins to reflect in your portfolio.')
@@ -2160,7 +2253,8 @@
                 }
             }
             catch (err) {
-                if ((err.message || err) === 'Insufficient rupee balance') {
+                console.error(err)
+                if ((err.message || err) === 'Insufficient BTC balance') {
                     showWalletResult('error', `Failed`, err.message || err, 'open-upi')
                 } else {
                     showWalletResult('error', `Failed`, err.message || err)
@@ -2388,7 +2482,7 @@
                 case 'confirm_trade_popup':
                     const asset = pagesData.params.asset;
                     const quantity = parseFloat(getRef('get_quantity').value)
-                    const setPrice = formatAmount(parseFloat(getRef('set_price').value))
+                    const setPrice = formatAmount(parseFloat(getRef('get_price').value))
                     getRef('confirm_trade__title').textContent = `${tradeType} ${asset}`
                     getRef('confirm_trade__details').innerHTML = `
                         <div class="grid">
@@ -2458,7 +2552,11 @@
         let isShowingFloID = true
 
         async function account() {
-            floTradeAPI.getAccount(proxy.userID, await proxy.secret).then(async acc => {
+            Promise.all([
+                floTradeAPI.getAccount(proxy.userID, await proxy.secret),
+                getLastTradePrice()
+            ]).then(([acc, price]) => {
+                getRef('get_price').value = price
                 document.body.classList.add('is-signed-in');
                 if (getRef('market_asset_rates'))
                     getRef('market_asset_rates').parentNode.remove()
@@ -2531,17 +2629,17 @@
                 let totalPortfolio = 0;
                 Object.entries(allTokens).sort((a, b) => b[1].net - a[1].net).forEach(([asset], index) => {
                     if (asset !== floGlobals.currency) {
-                        totalPortfolio += allTokens[asset].net
+                        totalPortfolio += allTokens[asset].net * floGlobals.lastTradePrice
                         frag.append(render.assetBalanceCard(asset))
-                    }
-                    else {
+                    } else {
                         getRef('exchange_btc_balance').innerHTML = ``
                         getRef('exchange_btc_balance').append(render.assetBalanceCard(asset))
                     }
                 })
                 getRef('my_assets').innerHTML = ''
                 getRef('my_assets').append(frag)
-                getRef('portfolio_value').textContent = formatAmount(toFixed(totalPortfolio, 2))
+                getRef('portfolio_value').dataset.btcAmount = totalPortfolio
+                getRef('portfolio_value').textContent = formatAmount(getConvertedAmount(totalPortfolio), selectedCurrency)
                 //My orders
                 render.userOrders();
 

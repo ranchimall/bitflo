@@ -1138,24 +1138,17 @@ sm-checkbox {
 }
 .personal-asset-balance {
   display: flex;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
   gap: 1.5rem 0.5rem;
   align-content: flex-start;
   padding: 1rem;
   border-radius: 0.5rem;
   width: 100%;
   background-color: rgba(var(--text-color), 0.03);
-  &:not(:last-of-type) {
-    margin-right: 0.5rem;
-  }
   .icon {
-    height: 3rem;
-    width: 3rem;
-    padding: 0.8rem;
-    border-radius: 3rem;
     margin-right: 0.5rem;
-    background-color: rgba(var(--foreground-color), 1);
     flex-shrink: 0;
+    fill: var(--accent-color);
   }
 }
 #personal_btc_balance,
