@@ -1444,6 +1444,14 @@ sm-checkbox {
       align-items: flex-start;
     }
   }
+  .no-data {
+    margin: auto;
+    background-color: rgba(var(--text-color), 0.03);
+    padding: 0.6rem 1rem;
+    border-radius: 5rem;
+    font-weight: 500;
+    font-size: 0.8rem;
+  }
   #price_history_chart {
     height: 20rem;
   }

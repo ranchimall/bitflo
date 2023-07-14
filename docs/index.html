@@ -194,6 +194,7 @@
                                 </div>
                                 <div id="price_chart_wrapper" class="flex" style="position: relative; flex: 1">
                                     <div id="price_history_chart"></div>
+                                    <p id="no_chart_data" class="no-data hidden">No price history available</p>
                                 </div>
                             </div>
                             <sm-form id="trade_form">
@@ -1698,22 +1699,30 @@
                 if (pagesData.currentPage !== 'exchange') return
                 const duration = getRef('price_duration_selector').value === 'hour' ? '48 weeks' : 'all-time' || '48 weeks'
                 floTradeAPI.getRateHistory(asset, duration).then(data => {
-                    data = data.map(({ time, rate }) => {
-                        return {
-                            time: getIST(time),
-                            value: rate
-                        }
-                    })
-                    if (lineSeries)
-                        lineSeries.setData(data);
-                    new ResizeObserver(entries => {
-                        chartDimensions.height = entries[0].contentRect.height - 10;
-                        chartDimensions.width = entries[0].contentRect.width;
+                    if (data.length) {
+                        data = data.map(({ time, rate }) => {
+                            return {
+                                time: getIST(time),
+                                value: rate
+                            }
+                        })
+                        if (lineSeries)
+                            lineSeries.setData(data);
+                        new ResizeObserver(entries => {
+                            chartDimensions.height = entries[0].contentRect.height - 10;
+                            chartDimensions.width = entries[0].contentRect.width;
+                            if (chart) {
+                                if (chartDimensions.width <= 0 || chartDimensions.height <= 0) return;
+                                chart.applyOptions({ width: chartDimensions.width, height: chartDimensions.height });
+                            }
+                        }).observe(getRef('price_chart_wrapper'));
+                    } else {
                         if (chart) {
-                            if (chartDimensions.width <= 0 || chartDimensions.height <= 0) return;
-                            chart.applyOptions({ width: chartDimensions.width, height: chartDimensions.height });
+                            chart.remove();
+                            chart = null;
                         }
-                    }).observe(getRef('price_chart_wrapper'));
+                        getRef('no_chart_data').classList.remove('hidden')
+                    }
                 })
             },
             userOrders() {
