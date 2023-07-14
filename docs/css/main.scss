@@ -793,7 +793,7 @@ sm-checkbox {
   grid-template-rows: auto 1fr;
 }
 .orders_section__header {
-  min-height: 2.8rem;
+  min-height: 3rem;
   position: sticky;
   top: 0;
   background-color: rgba(var(--background-color), 1);
@@ -814,6 +814,9 @@ sm-checkbox {
   grid-template-columns: min-content 1fr auto;
   border-radius: 0.5rem;
   grid-template-areas: "checkbox quantity quantity time" "checkbox price amount cancel";
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
   & > .grid {
     &:nth-of-type(2) {
       grid-area: price;
@@ -848,9 +851,11 @@ sm-checkbox {
     margin-right: 0.5rem;
   }
   &__quantity,
-  &__price {
+  &__price,
+  &__amount {
     font-size: 0.9rem;
     color: rgba(var(--text-color), 0.9);
+    font-weight: 700;
   }
 
   &__time {

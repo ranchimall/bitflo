@@ -843,7 +843,7 @@ sm-checkbox {
 }
 
 .orders_section__header {
-  min-height: 2.8rem;
+  min-height: 3rem;
   position: -webkit-sticky;
   position: sticky;
   top: 0;
@@ -869,6 +869,9 @@ sm-checkbox {
   grid-template-columns: min-content 1fr auto;
   border-radius: 0.5rem;
   grid-template-areas: "checkbox quantity quantity time" "checkbox price amount cancel";
+}
+.order-card:not(:last-child) {
+  margin-bottom: 1rem;
 }
 .order-card > .grid:nth-of-type(2) {
   grid-area: price;
@@ -899,9 +902,10 @@ sm-checkbox {
   cursor: pointer;
   margin-right: 0.5rem;
 }
-.order-card__quantity, .order-card__price {
+.order-card__quantity, .order-card__price, .order-card__amount {
   font-size: 0.9rem;
   color: rgba(var(--text-color), 0.9);
+  font-weight: 700;
 }
 .order-card__time {
   grid-area: time;
