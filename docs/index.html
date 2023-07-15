@@ -167,7 +167,7 @@
                                         </svg>
                                     </div>
                                     <h4 class="listed-asset__name">FLO</h4>
-                                    <b id="flo_exchange_rate" class="listed-asset__rate">0</b>
+                                    <b class="listed-asset__rate flo-exchange-rate">0</b>
                                 </a>
                             </li>
                         </ul>
@@ -327,7 +327,18 @@
                         <h5>ASSETS</h5>
                         <h5>PRICE</h5>
                     </div>
-                    <ul id="market_asset_rates"></ul>
+                    <ul id="market_asset_rates">
+                        <li class="listed-asset grid align-center">
+                            <div class="listed-asset__icon">
+                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M16.36,15.39c1.83,0,4.26-2.49,4.36-4.74-5.65-.19-4.91.47-7.28,2.39,2.19-2.4,1.42-7.79-1.43-10V6.17c2.33,1.49,2.21,5.14,0,7.15-2.23-2-2.27-5.69,0-7.15V3c-2.83,2.26-3.62,7.66-1.44,10-2.36-1.93-1.63-2.58-7.28-2.39.1,2.26,2.55,4.73,4.36,4.74,0,0-1.93.22-2.74-2.62,2.38-.37,4.29-.14,6.28,2-.79-.11-4.89,1.13-4.38,3.26.53.06,3,.3,3.58-.83-.17.18-1.25.5-1.53.05.38-1.39,2.32-2,2.32-2-1,1.82-.48,4.63.82,5.72,1.31-1.08,1.8-3.95.82-5.72,0,0,1.95.6,2.32,2-.29.46-1.36.12-1.53-.05.58,1.14,3.06.88,3.58.83.49-2.17-3.58-3.36-4.38-3.26,2-2.17,3.92-2.39,6.28-2C18.3,15.62,16.36,15.39,16.36,15.39ZM12,19.46c-.91-.79-.5-3,0-3.59C12.5,16.45,12.91,18.66,12,19.46Z" />
+                                </svg>
+                            </div>
+                            <h4 class="listed-asset__name">FLO</h4>
+                            <b class="listed-asset__rate flo-exchange-rate">0</b>
+                        </li>
+                    </ul>
                 </div>
                 <div class="grid gap-0-5 align-start">
                     <div class="orders_section__header flex align-center">
@@ -2022,7 +2033,9 @@
             return new Promise((resolve, reject) => {
                 floTradeAPI.getTradeList().then(tradeList => {
                     floGlobals.lastTradePrice = tradeList[0].unitValue || 0;
-                    getRef('flo_exchange_rate').textContent = `${floGlobals.lastTradePrice} ${floGlobals.currency}`
+                    document.querySelectorAll('.flo-exchange-rate').forEach(element => {
+                        element.textContent = `${floGlobals.lastTradePrice} ${floGlobals.currency}`
+                    })
                     resolve(floGlobals.lastTradePrice)
                 }).catch(reject)
             })
@@ -2715,6 +2728,7 @@
                 floGlobals.exchangeApiLoaded = true
                 console.log(nodes);
                 refresh(true);
+                getLastTradePrice()
             }).catch(error => console.error(error))
         })
         function signInWithCredentials() {
