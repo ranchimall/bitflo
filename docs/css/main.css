@@ -843,7 +843,7 @@ sm-checkbox {
 }
 
 .orders_section__header {
-  min-height: 2.8rem;
+  min-height: 3rem;
   position: -webkit-sticky;
   position: sticky;
   top: 0;
@@ -869,6 +869,9 @@ sm-checkbox {
   grid-template-columns: min-content 1fr auto;
   border-radius: 0.5rem;
   grid-template-areas: "checkbox quantity quantity time" "checkbox price amount cancel";
+}
+.order-card:not(:last-child) {
+  margin-bottom: 1rem;
 }
 .order-card > .grid:nth-of-type(2) {
   grid-area: price;
@@ -899,9 +902,10 @@ sm-checkbox {
   cursor: pointer;
   margin-right: 0.5rem;
 }
-.order-card__quantity, .order-card__price {
+.order-card__quantity, .order-card__price, .order-card__amount {
   font-size: 0.9rem;
   color: rgba(var(--text-color), 0.9);
+  font-weight: 700;
 }
 .order-card__time {
   grid-area: time;
@@ -1216,72 +1220,28 @@ sm-checkbox {
 #portfolio_cards_wrapper {
   display: grid;
   gap: 0.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
 }
 
 .personal-asset-balance {
+  display: flex;
+  gap: 1.5rem 0.5rem;
   align-content: flex-start;
   padding: 1rem;
   border-radius: 0.5rem;
-  color: rgba(0, 0, 0, 0.8);
   width: 100%;
+  background-color: rgba(var(--text-color), 0.03);
 }
-.personal-asset-balance:not(:last-of-type) {
+.personal-asset-balance .icon {
   margin-right: 0.5rem;
-}
-.personal-asset-balance:nth-of-type(1) {
-  background: url("bg-art2.svg") no-repeat bottom right, hsl(141deg, 100%, 88%);
-  background-size: contain;
-}
-.personal-asset-balance:nth-of-type(1) .icon {
-  background-color: hsla(141deg, 100%, 70%, 0.5);
-}
-.personal-asset-balance:nth-of-type(1) .button {
-  border: solid thin hsla(141deg, 100%, 70%, 0.5);
-}
-.personal-asset-balance:nth-of-type(2) {
-  background: url("back.svg") no-repeat top right, hsl(62deg, 100%, 83%);
-  background-size: contain;
-}
-.personal-asset-balance:nth-of-type(2) .icon {
-  background-color: hsla(55deg, 100%, 50%, 0.5);
-}
-.personal-asset-balance > .flex {
-  margin-bottom: 0.3rem;
-}
-.personal-asset-balance > .flex .icon {
-  height: 2rem;
-  width: 2rem;
-  padding: 0.4rem;
-  border-radius: 0.3rem;
-  fill: rgba(0, 0, 0, 0.8);
-  margin-right: 0.5rem;
-}
-.personal-asset-balance .button {
-  display: flex;
-  align-items: center;
-  margin-top: 0.5rem;
-  padding-right: 0.8rem;
-  justify-self: flex-start;
-  border-radius: 1rem;
-  background-color: rgba(var(--foreground-color), 1);
-  color: rgba(var(--text-color), 1);
-  transition: box-shadow 0.3s;
-}
-.personal-asset-balance .button .icon {
-  height: 1rem;
-  background-color: transparent;
-  margin-right: 0.3rem;
-}
-.personal-asset-balance .button:hover {
-  box-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.16);
+  flex-shrink: 0;
+  fill: var(--accent-color);
 }
 
-#personal_rupee_balance span:first-of-type,
+#personal_btc_balance span:first-of-type,
 #personal_flo_balance span:first-of-type {
   font-size: 1.5rem;
 }
-#personal_rupee_balance span:last-of-type,
+#personal_btc_balance span:last-of-type,
 #personal_flo_balance span:last-of-type {
   font-size: 0.9rem;
 }
@@ -1588,6 +1548,14 @@ sm-checkbox {
     gap: 1.5rem;
     grid-template-columns: 17rem minmax(0, 1fr);
     align-items: flex-start;
+  }
+  .no-data {
+    margin: auto;
+    background-color: rgba(var(--text-color), 0.03);
+    padding: 0.6rem 1rem;
+    border-radius: 5rem;
+    font-weight: 500;
+    font-size: 0.8rem;
   }
   #price_history_chart {
     height: 20rem;
