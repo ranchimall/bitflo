@@ -1,6 +1,6 @@
 'use strict';
 
-(function (EXPORTS) { //floTradeAPI v0.9.1
+(function (EXPORTS) { //floTradeAPI v0.9.1a
     const tradeAPI = EXPORTS;
 
     const DEFAULT = {
@@ -9,7 +9,7 @@
         currency: "BTC" //should come from blockchain config later
     }
 
-    const BTC_DUST_AMT = 546;
+    const BTC_DUST_AMT = btcOperator.util.Sat_to_BTC(546);
 
     /*Kademlia DHT K-bucket implementation as a binary tree.*/
     /**
