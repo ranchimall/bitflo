@@ -353,6 +353,7 @@ ul {
   width: 1.2rem;
   height: 1.2rem;
   fill: rgba(var(--text-color), 0.8);
+  flex-shrink: 0;
 }
 
 .margin-right-0-5 {
@@ -813,6 +814,21 @@ sm-checkbox {
   flex-direction: column;
   height: 100%;
   width: 100%;
+}
+
+#price_chart_wrapper:has(#price_history_chart:empty) {
+  background-color: rgba(var(--background-color), 0.8);
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.no-data {
+  margin: auto;
+  background-color: rgba(var(--text-color), 0.03);
+  padding: 0.6rem 1rem;
+  border-radius: 5rem;
+  font-weight: 500;
+  font-size: 0.8rem;
 }
 
 #trade_form {
@@ -1403,8 +1419,12 @@ sm-checkbox {
   .empty-state {
     align-self: center;
   }
+  theme-toggle {
+    order: 2;
+  }
   #user_popup_button {
-    width: 100%;
+    flex: 1;
+    order: 1;
   }
   .main_navbar__item--active .item__title {
     transform: translateY(100%);
@@ -1464,7 +1484,7 @@ sm-checkbox {
   #asset_page__footer button.active .icon {
     fill: var(--accent-color);
   }
-  .hide-on-mobile {
+  .hide-on-small {
     display: none !important;
   }
 }
@@ -1548,14 +1568,6 @@ sm-checkbox {
     gap: 1.5rem;
     grid-template-columns: 17rem minmax(0, 1fr);
     align-items: flex-start;
-  }
-  .no-data {
-    margin: auto;
-    background-color: rgba(var(--text-color), 0.03);
-    padding: 0.6rem 1rem;
-    border-radius: 5rem;
-    font-weight: 500;
-    font-size: 0.8rem;
   }
   #price_history_chart {
     height: 20rem;
