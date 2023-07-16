@@ -302,7 +302,7 @@ function ListSellOrders(req, res) {
         res.status(INVALID.e_code).send(INCORRECT_SERVER_ERROR.toString());
     else {
         let asset = req.query.asset;
-        if (asset && !market.keys.assets.isTradeable(asset))
+        if (asset && !keys.assets.isTradeable(asset))
             res.status(INVALID.e_code).send(INVALID.str(eCode.INVALID_ASSET_NAME, "Invalid asset parameter"));
         else
             DB.query("SELECT SellOrder.floID, SellOrder.asset, SellOrder.price, SellOrder.quantity, SellOrder.time_placed FROM SellOrder" +
@@ -326,7 +326,7 @@ function ListBuyOrders(req, res) {
         res.status(INVALID.e_code).send(INCORRECT_SERVER_ERROR.toString());
     else {
         let asset = req.query.asset;
-        if (asset && !market.keys.assets.isTradeable(asset))
+        if (asset && !keys.assets.isTradeable(asset))
             res.status(INVALID.e_code).send(INVALID.str(eCode.INVALID_ASSET_NAME, "Invalid asset parameter"));
         else
             DB.query("SELECT BuyOrder.floID, BuyOrder.asset, BuyOrder.maxPrice, BuyOrder.quantity, BuyOrder.time_placed FROM BuyOrder" +
@@ -349,7 +349,7 @@ function ListTradeTransactions(req, res) {
         res.status(INVALID.e_code).send(INCORRECT_SERVER_ERROR.toString());
     else {
         let asset = req.query.asset;
-        if (asset && !market.keys.assets.isTradeable(asset))
+        if (asset && !keys.assets.isTradeable(asset))
             res.status(INVALID.e_code).send(INVALID.str(eCode.INVALID_ASSET_NAME, "Invalid asset parameter"));
         else
             DB.query("SELECT * FROM TradeTransactions" +
@@ -471,7 +471,7 @@ module.exports = {
     set secret(s) {
         secret = s;
     },
-    
+
     pause() {
         serving = false;
         background.periodicProcess.stop();
