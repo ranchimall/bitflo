@@ -94,7 +94,7 @@
                     <sm-form id="login_form">
                         <div class="grid gap-0-5">
                             <h2>Login</h2>
-                            <p>Enter your FLO private key to login</p>
+                            <p>Enter your FLO/BTC private key to login</p>
                         </div>
                         <sm-input type="password" id="login_form__priv_key" placeholder="Private key"
                             error-text="Invalid private key" data-private-key autofocus animate required>
@@ -294,7 +294,7 @@
                         </sm-chips>
                     </div>
                     <div id="orders_section__header--secondary" class="flex w-100 align-center space-between hidden">
-                        <button class="" onclick="clearSelection()" title="Clear all selection">
+                        <button class="button" onclick="clearSelection()" title="Clear all selection">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon margin-right-0-5" height="24px"
                                 viewBox="0 0 24 24" width="24px">
                                 <path d="M0 0h24v24H0V0z" fill="none" />
@@ -304,8 +304,8 @@
                             <span id="selected_orders"></span>
                         </button>
                         <div class="options">
-                            <button class="button" title="Cancel selected orders" onclick="cancelAll()">
-                                Cancel all
+                            <button class="button" title="Cancel all selected orders" onclick="cancelAll()">
+                                Cancel selected
                             </button>
                         </div>
                     </div>
@@ -505,7 +505,7 @@
                     </div>
                 </div>
                 <div id="portfolio_asset_page" class="hidden grid gap-1-5">
-                    <div class="flex align-center sticky top-0">
+                    <div class="flex align-center sticky top-0 gap-0-5">
                         <a href="#/portfolio" class="button icon-only">
                             <svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
                                 width="24px" fill="#000000">
@@ -538,7 +538,7 @@
                 </div>
             </div>
             <div id="history" class="mobile-page hidden">
-                <div class="flex align-center sticky top-0">
+                <div class="flex align-center sticky top-0 gap-0-5">
                     <a href="#/portfolio" class="button icon-only">
                         <svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
                             width="24px" fill="#000000">
@@ -1744,13 +1744,14 @@
                 return card
             },
             marketOrderCard(orderDetails = {}) {
-                const { floID, asset, quantity, price, time_placed, type } = orderDetails
+                const { floID, asset, quantity, maxPrice, time_placed, type } = orderDetails
+                console.log(orderDetails)
                 const card = getRef('market_order_template').content.cloneNode(true).firstElementChild
                 card.dataset.type = type
                 card.classList.add(`transaction-card--${type}`)
                 card.querySelector('.transaction-card__quantity').textContent = `${quantity} ${asset}`
-                card.querySelector('.transaction-card__price').textContent = formatAmount(price)
-                card.querySelector('.transaction-card__total').textContent = formatAmount(parseFloat(price * quantity))
+                card.querySelector('.transaction-card__price').textContent = formatAmount(maxPrice)
+                card.querySelector('.transaction-card__total').textContent = formatAmount(parseFloat(maxPrice * quantity))
                 card.querySelector('.more-info').dataset.time = time_placed
                 card.querySelector('.more-info').dataset.buyer = type === 'buy' ? floID : undefined
                 card.querySelector('.more-info').dataset.seller = type === 'sell' ? floID : undefined
@@ -2222,20 +2223,22 @@
             const quantity = parseFloat(getRef('get_user_amount').value)
             try {
                 buttonLoader('portfolio_popup__cta', true)
-                const proxySecret = await proxy.secret;
+                const [proxySecret, sinkID] = await Promise.all([proxy.secret, floTradeAPI.getSink()])
                 let response
                 switch (type) {
                     case 'deposit':
                         const privKey = getRef('get_private_key').value;
                         switch (asset) {
                             case 'FLO':
-                                response = await floTradeAPI.depositFLO(quantity, proxy.userID, await proxy.sinkID, privKey, proxySecret)
+                                response = await floTradeAPI.depositFLO(quantity, proxy.userID, sinkID, privKey, proxySecret)
                                 break;
                             case 'BTC':
-                                response = await floTradeAPI.depositBTC(quantity, proxy.userID, await proxy.sinkID, privKey, proxySecret)
+                                if (quantity <= 0.00000546)
+                                    return notify('Quantity should be greater than 0.00000550', 'error')
+                                response = await floTradeAPI.depositBTC(quantity, proxy.userID, sinkID, privKey, proxySecret)
                                 break;
                             default:
-                                response = await floTradeAPI.depositToken(asset, quantity, proxy.userID, await proxy.sinkID, privKey, proxySecret)
+                                response = await floTradeAPI.depositToken(asset, quantity, proxy.userID, sinkID, privKey, proxySecret)
                         }
                         console.log(response)
                         showWalletResult('success', `Sent ${asset} deposit request`, 'This may take upto 30 mins to reflect in your portfolio.')
@@ -2496,7 +2499,7 @@
                 case 'confirm_trade_popup':
                     const asset = pagesData.params.asset;
                     const quantity = parseFloat(getRef('get_quantity').value)
-                    const setPrice = formatAmount(parseFloat(getRef('get_price').value))
+                    const setPrice = parseFloat(getRef('get_price').value)
                     getRef('confirm_trade__title').textContent = `${tradeType} ${asset}`
                     getRef('confirm_trade__details').innerHTML = `
                         <div class="grid">
@@ -2505,7 +2508,11 @@
                         </div>
                         <div class="grid">
                             <p>At price</p>
-                            <b>${setPrice}</b>
+                            <b>${formatAmount(setPrice)}</b>
+                        </div>
+                        <div class="grid">
+                            <p>Total amount</p>
+                            <b>${formatAmount(quantity * setPrice)}</b>
                         </div>
                     `;
                     break;
@@ -2617,8 +2624,8 @@
                 if (acc.subAdmin)
                     console.info("logged in as subAdmin");
 
-                // FLO balance init
-                allTokens[floGlobals.currency] = {
+                // BTC balance init
+                allTokens[floGlobals.currency] = allTokens['FLO'] = {
                     total: 0,
                     locked: 0,
                     net: 0
