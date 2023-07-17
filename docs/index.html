@@ -553,6 +553,44 @@
                     <p>No exchange transactions</p>
                 </div>
             </div>
+            <div id="help" class="mobile-page hidden grid gap-2">
+                <h1>Hey there! How can we help you today?</h1>
+                <div class="grid gap-0-5">
+                    <h5>F.A.Qs</h5>
+                    <div class="grid gap-0-5">
+                        <details>
+                            <summary class="interact">
+                                <h4>
+                                    What type of exchange is this?
+                                </h4>
+                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
+                                    width="24px" fill="#000000">
+                                    <path d="M0 0h24v24H0V0z" fill="none" />
+                                    <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+                                </svg>
+                            </summary>
+                            <p>This is an Open Order Book exchange, which means prices are decided by traders on the
+                                platform.</p>
+                        </details>
+                        <details>
+                            <summary class="interact">
+                                <h4>
+                                    Who decides the price of assets?
+                                </h4>
+                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
+                                    width="24px" fill="#000000">
+                                    <path d="M0 0h24v24H0V0z" fill="none" />
+                                    <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+                                </svg>
+                            </summary>
+                            <p>
+                                Traders on the platform decide the price of assets. The price of an asset is the price
+                                at which the last trade was executed.
+                            </p>
+                        </details>
+                    </div>
+                </div>
+            </div>
         </section>
         <nav id="main_navbar" class="flex align-center">
             <a href="#/exchange" class="main_navbar__item main_navbar__item--active interact">
@@ -603,11 +641,17 @@
                 </svg>
                 <div class="item__title">Portfolio</div>
             </a>
+            <a href="#/help" class="main_navbar__item interact">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+                    fill="#000000">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path
+                        d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z" />
+                </svg>
+                <div class="item__title">Help</div>
+            </a>
         </nav>
     </article>
-    <!-- 
-    * add warning to show if an order is not considered
- -->
 
     <sm-popup id="confirm_trade_popup">
         <header slot="header" class="popup__header">
