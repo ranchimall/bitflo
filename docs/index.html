@@ -1744,14 +1744,14 @@
                 return card
             },
             marketOrderCard(orderDetails = {}) {
-                const { floID, asset, quantity, maxPrice, time_placed, type } = orderDetails
+                const { floID, asset, quantity, price, time_placed, type } = orderDetails
                 console.log(orderDetails)
                 const card = getRef('market_order_template').content.cloneNode(true).firstElementChild
                 card.dataset.type = type
                 card.classList.add(`transaction-card--${type}`)
                 card.querySelector('.transaction-card__quantity').textContent = `${quantity} ${asset}`
-                card.querySelector('.transaction-card__price').textContent = formatAmount(maxPrice)
-                card.querySelector('.transaction-card__total').textContent = formatAmount(parseFloat(maxPrice * quantity))
+                card.querySelector('.transaction-card__price').textContent = formatAmount(price)
+                card.querySelector('.transaction-card__total').textContent = formatAmount(parseFloat(price * quantity))
                 card.querySelector('.more-info').dataset.time = time_placed
                 card.querySelector('.more-info').dataset.buyer = type === 'buy' ? floID : undefined
                 card.querySelector('.more-info').dataset.seller = type === 'sell' ? floID : undefined
@@ -1763,7 +1763,7 @@
                 const card = getRef('market_transaction_template').content.cloneNode(true).firstElementChild
                 card.querySelector('.completed-trade__quantity').textContent = `${quantity} ${asset}`
                 card.querySelector('.completed-trade__time').textContent = getFormattedTime(time)
-                card.querySelector('.completed-trade__price').textContent = `₹${unitValue}`
+                card.querySelector('.completed-trade__price').textContent = formatAmount(unitValue)
                 card.querySelector('.completed-trade__total').textContent = formatAmount(parseFloat(unitValue * quantity))
                 card.querySelector('.more-info').dataset.buyer = buyer
                 card.querySelector('.more-info').dataset.seller = seller
