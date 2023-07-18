@@ -516,6 +516,9 @@
                         <b id="portfolio_asset__name"></b>
                     </div>
                     <div id="portfolio_asset__balance" class="flex flex-direction-column gap-1"></div>
+                    <p>
+                        * Deposits and withdrawals can be only made from/to signed in FLO/BTC address.
+                    </p>
                     <fieldset id="portfolio_asset__actions" class="flex gap-0-3">
                         <button class="button flex-1" value="deposit">
                             Deposit
@@ -2663,7 +2666,7 @@
                         `)
                         isShowingFloID = false
                     }
-                }, 1000 * 60);
+                }, 10000 * 60);
                 getRef("sink_id").value = acc.sinkID;
                 if (acc.subAdmin)
                     console.info("logged in as subAdmin");
