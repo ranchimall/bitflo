@@ -2083,7 +2083,7 @@
         function getLastTradePrice() {
             return new Promise((resolve, reject) => {
                 floTradeAPI.getTradeList().then(tradeList => {
-                    floGlobals.lastTradePrice = tradeList[0].unitValue || 0;
+                    floGlobals.lastTradePrice = tradeList[0]?.unitValue || 0;
                     document.querySelectorAll('.flo-exchange-rate').forEach(element => {
                         element.textContent = `${floGlobals.lastTradePrice} ${floGlobals.currency}`
                     })
