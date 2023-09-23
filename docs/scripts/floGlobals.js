@@ -1,6 +1,6 @@
 const floGlobals = {
     blockchain: "FLO",
-    marketID: "FKAEdnPfjXLHSYwrXQu377ugN4tXU7VGdf",
+    marketID: "FCVNCEVVExEY2f6C5xtJcX42tSqPMgj2eB",
     currency: "BTC"
 };
 
