@@ -4,7 +4,7 @@
     const tradeAPI = EXPORTS;
 
     const DEFAULT = {
-        marketID: floGlobals.marketID || "FKAEdnPfjXLHSYwrXQu377ugN4tXU7VGdf",
+        marketID: floGlobals.marketID || "FCVNCEVVExEY2f6C5xtJcX42tSqPMgj2eB",
         marketApp: "flo_btc",
         currency: "BTC" //should come from blockchain config later
     }
